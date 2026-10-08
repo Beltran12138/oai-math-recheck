@@ -150,4 +150,10 @@ theorem numericalRange_fin_one (A : Matrix (Fin 1) (Fin 1) ℂ) :
 
 end
 
+/- The derivation must not smuggle in anything the gates do not see, so it
+states its own axiom dependency.  This lands in the log gate C keeps, next to
+the same question asked of OpenAI's two theorems through a file of theirs. -/
+#print axioms scalar_crouzeix
+#print axioms numericalRange_fin_one
+
 end Recheck

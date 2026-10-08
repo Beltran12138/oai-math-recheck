@@ -169,7 +169,9 @@ theorem scalar_crouzeix {n : ℕ} (hn : 0 < n) (A : Matrix (Fin n) (Fin n) ℂ)
     ‖(Polynomial.aeval A) p‖ ≤ 2 * sSup ((fun z => ‖p.eval z‖) '' numericalRange A)
 ```
 
-`#print axioms Recheck.scalar_crouzeix` → `[propext, Classical.choice, Quot.sound]`.
+`Scalar.lean` ends with `#print axioms` on both of its own results, so the
+derivation cannot smuggle in anything the gates do not see; the answer is in
+[`logs/ci-ubuntu-x86_64/verify.log`](logs/ci-ubuntu-x86_64/verify.log).
 
 **What this is worth, precisely.** As of August 2026 this statement is a
 theorem independently proved by humans, so deriving it is a *consistency
