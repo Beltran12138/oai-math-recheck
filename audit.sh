@@ -74,6 +74,52 @@ fi
 
 # ======================================= C. is it the challenge's statement?
 gate C "what is proved is the statement in the comparator challenge"
+# Two ways to answer this.  With CHALLENGE_MODULE set, do what comparator does:
+# elaborate the challenge and the solution in separate processes and compare
+# every OAI constant the statement reaches (tools/StatementDump.lean).  That
+# works when the statement contains a `structure`, which the copy-and-defeq
+# method below cannot handle.  An empty dump on both sides also "matches", so
+# the gate demands a non-empty dump that contains every headline theorem.
+DUMP_TOOL="$REPO_ROOT/tools/StatementDump.lean"
+dump() { lake env lean --run "$DUMP_TOOL" "$1" $THEOREMS > "$2" 2> "$2.err"; }
+DUMPED=0
+if [ -n "${CHALLENGE_MODULE:-}" ]; then
+  DUMPED=1
+  if ! lake build "$CHALLENGE_MODULE" > challenge-build.log 2>&1; then
+    no "the challenge module itself does not build -- see challenge-build.log"
+  else
+    dump "$CHALLENGE_MODULE" dump-challenge.txt; DC=$?
+    dump "$MAIN_IMPORT" dump-solution.txt; DS=$?
+    NC=$(wc -l < dump-challenge.txt | tr -d ' ')
+    HAVE=0
+    for t in $THEOREMS; do
+      grep -q "^$t	theorem	" dump-challenge.txt && grep -q "^$t	theorem	" dump-solution.txt && HAVE=$((HAVE+1))
+    done
+    NTH=$(echo "$THEOREMS" | wc -w | tr -d ' ')
+    if [ "$DC" != "0" ] || [ "$DS" != "0" ]; then
+      no "a dump failed (challenge exit $DC, solution exit $DS) -- see dump-*.txt.err"
+    elif [ "$NC" = "0" ] || [ "$HAVE" != "$NTH" ]; then
+      no "dump is empty or lacks a headline theorem ($HAVE/$NTH found) -- nothing was compared"
+    elif ! cmp -s dump-challenge.txt dump-solution.txt; then
+      no "solution and challenge elaborate differently:"
+      diff dump-challenge.txt dump-solution.txt | grep '^[<>]' | cut -f1,2 | sort -u | head -10 | sed 's/^/      /'
+    else
+      ok "$NC constants identical after elaboration (types, universe params, definition bodies)"
+    fi
+    # Pinned facts about how the statement elaborated, e.g. which norm instance
+    # a definition picked up.  Each line is "constant|substring", checked
+    # against the challenge dump; a missing constant counts as a failure.
+    if [ -n "${DUMP_ASSERT:-}" ]; then
+      while IFS='|' read -r c needle; do
+        [ -z "$c" ] && continue
+        L=$(grep "^$c	" dump-challenge.txt)
+        if [ -z "$L" ]; then no "assert: $c is not in the dump"
+        elif printf '%s' "$L" | grep -qF "$needle"; then ok "assert: $c uses $needle"
+        else no "assert: $c does not use $needle"; fi
+      done <<< "$DUMP_ASSERT"
+    fi
+  fi
+fi
 if compgen -G "*.lean" > /dev/null && [ -n "${AUDIT_TARGETS:-}" ]; then
   VOUT=$(for t in $AUDIT_TARGETS; do lake build "$t" 2>&1; done)
   echo "$VOUT" > verify.log
@@ -83,14 +129,14 @@ if compgen -G "*.lean" > /dev/null && [ -n "${AUDIT_TARGETS:-}" ]; then
   else
     ok "$AUDIT_TARGETS built; the defeq checks inside them went through"
   fi
-else
-  skip "no audit files for this family"
+elif [ "$DUMPED" = "0" ]; then
+  skip "no audit files and no CHALLENGE_MODULE for this family"
 fi
 
 # ============================== D. are the copied definitions really theirs?
 # Gate C is vacuous if we copied the definitions out of the *solution* instead
 # of the *challenge*: then it proves a thing by itself.  So diff them.
-gate D "definitions we re-declared are verbatim the challenge's"
+gate D "definitions compared against the challenge are verbatim the challenge's"
 if [ -n "${COPIED_DEFS:-}" ] && [ -n "${COPIED_INTO:-}" ] && [ -n "${CHALLENGE:-}" ]; then
   python3 - "$CHALLENGE" "$COPIED_INTO" $COPIED_DEFS <<'PY'
 import re, sys
@@ -98,8 +144,12 @@ chal, mine, *names = sys.argv[1:]
 def grab(path):
     s = open(path, encoding='utf-8').read()
     out = {}
+    # A declaration ends at a blank line or at the next line that starts in
+    # column 0.  Ending only at blank lines once glued two adjacent abbrevs
+    # together and reported a false DIFFERS.
     for n in names:
-        m = re.search(r'^(?:noncomputable\s+)?def\s+' + re.escape(n) + r'\b.*?(?=\n\n)', s, re.S | re.M)
+        m = re.search(r'^(?:noncomputable\s+)?(?:def|abbrev|structure)\s+' + re.escape(n)
+                      + r'(?=[\s:({\[]).*?(?=\n(?:[ \t]*\n|\S)|\Z)', s, re.S | re.M)
         out[n] = re.sub(r'\s+', ' ', m.group(0)).strip() if m else None
     return out
 a, b = grab(chal), grab(mine)
@@ -119,7 +169,28 @@ fi
 # Perturb the constant in our own audit file.  If the perturbed file still
 # compiles, gate C was not testing anything.
 gate E "negative control: a wrong constant must be rejected"
-if [ -n "${NEG_FILE:-}" ] && [ -n "${NEG_SED:-}" ] && [ -f "$NEG_FILE" ]; then
+if [ "${NEG_KIND:-}" = "dump" ] && [ -n "${NEG_SED:-}" ] && [ -n "${CHALLENGE:-}" ]; then
+  # Perturb a copy of the challenge, elaborate it, and require its dump to
+  # disagree with the solution's.  If it agrees, gate C compares nothing.
+  NEGMOD=ComparatorChallenges.NegControl
+  sed "$NEG_SED" "$CHALLENGE" > ComparatorChallenges/NegControl.lean
+  if cmp -s "$CHALLENGE" ComparatorChallenges/NegControl.lean; then
+    no "NEG_SED changed nothing -- the control is not testing anything"
+  elif ! lake build "$NEGMOD" > neg-build.log 2>&1; then
+    no "the perturbed challenge does not build -- see neg-build.log"
+  else
+    dump "$NEGMOD" dump-negcontrol.txt; DN=$?
+    NN=$(wc -l < dump-negcontrol.txt | tr -d ' ')
+    if [ "$DN" != "0" ] || [ "$NN" = "0" ]; then
+      no "the negative-control dump failed or is empty"
+    elif cmp -s dump-negcontrol.txt dump-solution.txt; then
+      no "the perturbed statement dumps identically -- gate C is vacuous"
+    else
+      ok "rejected: differs in $(diff dump-negcontrol.txt dump-solution.txt | grep '^<' | cut -f1 | cut -c3- | sort -u | tr '\n' ' ')"
+    fi
+  fi
+  rm -f ComparatorChallenges/NegControl.lean
+elif [ -n "${NEG_FILE:-}" ] && [ -n "${NEG_SED:-}" ] && [ -f "$NEG_FILE" ]; then
   sed "$NEG_SED" "$NEG_FILE" > .NegControl.lean
   if cmp -s "$NEG_FILE" .NegControl.lean; then
     no "NEG_SED changed nothing -- the control is not testing anything"
@@ -133,7 +204,7 @@ if [ -n "${NEG_FILE:-}" ] && [ -n "${NEG_SED:-}" ] && [ -f "$NEG_FILE" ]; then
   fi
   rm -f .NegControl.lean
 else
-  skip "family.conf does not declare NEG_FILE / NEG_SED"
+  skip "family.conf declares neither NEG_KIND=dump nor NEG_FILE / NEG_SED"
 fi
 
 # ========================================= F. anything that skips the kernel

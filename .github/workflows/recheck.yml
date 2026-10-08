@@ -25,6 +25,12 @@ jobs:
   recheck:
     runs-on: ubuntu-latest
     timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      matrix:
+        # A manual run checks the one config it was given; anything else
+        # checks every config in families/.
+        family: ${{ github.event.inputs.family && fromJSON(format('["{0}"]', github.event.inputs.family)) || fromJSON('["325", "325-hilbert"]') }}
     steps:
       - uses: actions/checkout@v7
 
@@ -42,7 +48,7 @@ jobs:
 
       - name: recheck
         env:
-          FAMILY: ${{ github.event.inputs.family || '325' }}
+          FAMILY: ${{ matrix.family }}
           UPSTREAM_SHA_IN: ${{ github.event.inputs.upstream_sha }}
         run: |
           if [ -n "$UPSTREAM_SHA_IN" ]; then export UPSTREAM_SHA="$UPSTREAM_SHA_IN"; fi
@@ -62,7 +68,7 @@ jobs:
         continue-on-error: true
         uses: actions/upload-artifact@v7
         with:
-          name: logs-family-${{ github.event.inputs.family || '325' }}
+          name: logs-family-${{ matrix.family }}
           # .work is a dot-directory, which upload-artifact skips by default.
           include-hidden-files: true
           path: |
@@ -70,4 +76,7 @@ jobs:
             .work/*/proj/cache.log
             .work/*/proj/axioms.log
             .work/*/proj/verify.log
+            .work/*/proj/dump-*.txt
+            .work/*/proj/dump-*.txt.err
+            .work/*/proj/*-build.log
           if-no-files-found: warn

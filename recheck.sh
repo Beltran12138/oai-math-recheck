@@ -99,7 +99,8 @@ if [ -n "${CHALLENGE:-}" ]; then
   cp "$SRC/$CHALLENGE" "$PROJ/$CHALLENGE"
 fi
 cp "$SRC/lean-toolchain" "$PROJ/lean-toolchain"
-[ -f "$SRC/docs/$FAMILY_NUMBER.md" ] && cp "$SRC/docs/$FAMILY_NUMBER.md" "$PROJ/family-docs.md"
+DOCS="${DOCS_NUMBER:-$FAMILY_NUMBER}"   # 325-hilbert reads docs/325.md
+[ -f "$SRC/docs/$DOCS.md" ] && cp "$SRC/docs/$DOCS.md" "$PROJ/family-docs.md"
 
 # Pin Mathlib to what upstream's own manifest pins, never to a guess of ours.
 MATHLIB_REV=$(python3 -c "
