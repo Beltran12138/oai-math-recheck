@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: install elan
         run: |
@@ -49,9 +49,12 @@ jobs:
           chmod +x recheck.sh audit.sh
           ./recheck.sh "$FAMILY"
 
+      # Never let an artifact-upload hiccup turn a green re-check red: the gate
+      # results are in the step log above either way.
       - name: logs
         if: always()
-        uses: actions/upload-artifact@v4
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
         with:
           name: logs-family-${{ github.event.inputs.family || '325' }}
           path: |
