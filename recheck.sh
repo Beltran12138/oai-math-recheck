@@ -55,6 +55,7 @@ fi
 # theorem.  Picking the first file you open is how you misread a family.
 cat > "$UP/.git/info/sparse-checkout" <<EOF
 /lean/$FAMILY_DIR/
+$(for d in ${EXTRA_DIRS:-}; do echo "/lean/$d/"; done)
 /lean/ComparatorChallenges/
 /lean/lean-toolchain
 /lean/lake-manifest.json
@@ -74,11 +75,22 @@ echo "    $NF files, $NL lines"
 
 # --------------------------------------------- 2. dependency admissibility
 say "checking the family imports nothing beyond Mathlib"
-SELF_PREFIX="${FAMILY_DIR//\//.}"
-BAD=$(find "$SRC/$FAMILY_DIR" -name '*.lean' -exec grep -h '^import ' {} + \
+# EXTRA_DIRS: other proof directories this family imports.  Their own imports
+# are held to the same rule.  Declaring one is a visible statement that this
+# family's proof is built partly from another family's development.
+SELF_PREFIXES="${FAMILY_DIR//\//.}"
+DIRS="$SRC/$FAMILY_DIR"
+for d in ${EXTRA_DIRS:-}; do
+  [ -d "$SRC/$d" ] || { echo "no such extra dir: $d" >&2; exit 1; }
+  SELF_PREFIXES="$SELF_PREFIXES ${d//\//.}"
+  DIRS="$DIRS $SRC/$d"
+done
+BAD=$(find $DIRS -name '*.lean' -exec grep -h '^import ' {} + \
       | awk '{print $2}' | sort -u \
       | grep -vE '^(Mathlib|Batteries|Aesop|Qq|Plausible|ImportGraph|LeanSearchClient|ProofWidgets)(\.|$)' \
-      | grep -v "^$SELF_PREFIX" || true)
+      | awk -v P="$SELF_PREFIXES" 'BEGIN { n = split(P, p, " ") }
+             { for (i = 1; i <= n; i++) if ($0 == p[i] || index($0, p[i] ".") == 1) next; print }' \
+      || true)
 if [ -n "$BAD" ]; then
   echo "    needs imports this harness does not provide:" >&2
   echo "$BAD" | sed 's/^/      /' >&2
@@ -94,6 +106,11 @@ TOP="${FAMILY_DIR%%/*}"
 rm -rf "$PROJ/$TOP" "$PROJ/ComparatorChallenges"
 mkdir -p "$PROJ/$(dirname "$FAMILY_DIR")"
 cp -R "$SRC/$FAMILY_DIR" "$PROJ/$(dirname "$FAMILY_DIR")/"
+for d in ${EXTRA_DIRS:-}; do
+  [ "${d%%/*}" = "$TOP" ] || { echo "extra dir $d is outside $TOP/" >&2; exit 1; }
+  mkdir -p "$PROJ/$(dirname "$d")"
+  cp -R "$SRC/$d" "$PROJ/$(dirname "$d")/"
+done
 # COPIED_FROM: a second challenge file whose definitions an audit file copies,
 # e.g. to check that one proof development closes another one's statement.
 for c in ${CHALLENGE:-} ${COPIED_FROM:-}; do
@@ -113,6 +130,9 @@ for p in json.load(open('$SRC/lake-manifest.json'))['packages']:
 else: sys.exit('mathlib missing from upstream lake-manifest.json')")
 echo "    mathlib -> ${MATHLIB_REV:0:12}  (read from upstream manifest)"
 
+GLOBS="\"${FAMILY_DIR//\//.}.+\""
+for d in ${EXTRA_DIRS:-}; do GLOBS="$GLOBS, \"${d//\//.}.+\""; done
+
 cat > "$PROJ/lakefile.toml" <<EOF
 name = "recheck"
 
@@ -126,7 +146,7 @@ autoImplicit = false
 
 [[lean_lib]]
 name = "$TOP"
-globs = ["${FAMILY_DIR//\//.}.+"]
+globs = [$GLOBS]
 
 [[lean_lib]]
 name = "ComparatorChallenges"

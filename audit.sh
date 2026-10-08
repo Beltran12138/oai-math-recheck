@@ -212,11 +212,11 @@ fi
 
 # ========================================= F. anything that skips the kernel
 gate F "no kernel bypass, no custom axioms, dependencies untouched"
-SCOPE="$FAMILY_DIR"
+SCOPE="$FAMILY_DIR ${EXTRA_DIRS:-}"   # everything this family's proof is built from
 declare -a HITS=()
 for pat in 'set_option' '^axiom ' 'native_decide' '\bunsafe\b' 'implemented_by' \
            '@\[extern' 'Lean\.ofReduceBool' '#exit' '^(macro|elab|syntax)'; do
-  n=$(grep -rnE "$pat" "$SCOPE" 2>/dev/null | wc -l | tr -d ' ')
+  n=$(grep -rnE "$pat" $SCOPE 2>/dev/null | wc -l | tr -d ' ')
   printf '      %-22s %s\n' "$pat" "$n"
   [ "$n" != "0" ] && HITS+=("$pat($n)")
 done
