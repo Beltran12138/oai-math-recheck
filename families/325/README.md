@@ -227,7 +227,8 @@ needed that neither Mathlib nor OpenAI's files contain:
    Not pinned down: whether `tensorEvaluation`/`rangeMaximum` with `m` free is
    the complete Crouzeix inequality as the literature means it. That is the one
    sentence of the claim that is new, and it is the one sentence a machine
-   cannot settle for you.
+   cannot settle for you. The top-level README now reads it clause by clause
+   against the preprint's Theorem 1.1; that is still reading, not a gate.
 2. **We did not run `comparator`.** It wants Linux Landlock (`landrun`) plus
    `systemd-run`. So what is here is a reproduction plus an axiom and statement
    audit, not OpenAI's own adversarial check, and the provenance claim is just
@@ -236,6 +237,12 @@ needed that neither Mathlib nor OpenAI's files contain:
    is a complete, axiom-clean proof of the formal statement. Whether the
    twelve-page preprint is a correct human-readable proof of the same thing is
    a separate question, and a referee's rather than ours.
+4. **This is one of the family's four substantive comparator statements.**
+   `lean/docs/325.md` links five comparator files and labels only
+   `HilbertCrouzeix` as support. Everything above is about `DirectCrouzeix`;
+   `CompleteCrouzeix`, `StructuralCrouzeix` and `CrouzeixHilbert` (the
+   arbitrary-Hilbert-space version) have not been rebuilt here. An earlier
+   comment in `family.env` called those three "support lemmas"; it was wrong.
 
 ## Files
 
