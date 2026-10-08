@@ -18,7 +18,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FAMILY_NUMBER="${1:-}"
 [ -n "$FAMILY_NUMBER" ] || { sed -n '2,12p' "$0" >&2; exit 64; }
 PROJ="${2:-$REPO_ROOT/.work/$FAMILY_NUMBER/proj}"
-CONF="$REPO_ROOT/families/$FAMILY_NUMBER/family.env"
+CONF="$REPO_ROOT/families/$FAMILY_NUMBER/family.conf"
 [ -f "$CONF" ] || { echo "no config: $CONF" >&2; exit 64; }
 # shellcheck source=/dev/null
 . "$CONF"
@@ -52,8 +52,8 @@ fi
 
 # ============================================ B. axioms, via nothing of ours
 gate B "the headline theorems rest on no axiom beyond the standard three"
-: "${MAIN_IMPORT:?family.env must set MAIN_IMPORT}"
-: "${THEOREMS:?family.env must set THEOREMS}"
+: "${MAIN_IMPORT:?family.conf must set MAIN_IMPORT}"
+: "${THEOREMS:?family.conf must set THEOREMS}"
 { echo "import $MAIN_IMPORT"; for t in $THEOREMS; do echo "#print axioms $t"; done; } > .axcheck.lean
 AX=$(lake env lean .axcheck.lean 2>&1)
 echo "$AX" > axioms.log
@@ -112,7 +112,7 @@ sys.exit(1 if bad else 0)
 PY
   [ $? -eq 0 ] || FAILED=1
 else
-  skip "family.env does not declare COPIED_DEFS / COPIED_INTO / CHALLENGE"
+  skip "family.conf does not declare COPIED_DEFS / COPIED_INTO / CHALLENGE"
 fi
 
 # ======================================== E. does gate C actually have teeth?
@@ -133,7 +133,7 @@ if [ -n "${NEG_FILE:-}" ] && [ -n "${NEG_SED:-}" ] && [ -f "$NEG_FILE" ]; then
   fi
   rm -f .NegControl.lean
 else
-  skip "family.env does not declare NEG_FILE / NEG_SED"
+  skip "family.conf does not declare NEG_FILE / NEG_SED"
 fi
 
 # ========================================= F. anything that skips the kernel

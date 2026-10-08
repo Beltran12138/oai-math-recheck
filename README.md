@@ -202,8 +202,8 @@ either.
 
 ## Adding a family
 
-Create `families/<n>/family.env` (copy
-[325's](families/325/family.env), it is commented) and run `./recheck.sh <n>`.
+Create `families/<n>/family.conf` (copy
+[325's](families/325/family.conf), it is commented) and run `./recheck.sh <n>`.
 
 If the family imports anything outside Mathlib, `recheck.sh` stops and says
 what. That is a result, not an obstacle: it means that family cannot be checked

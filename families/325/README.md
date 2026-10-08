@@ -242,13 +242,13 @@ needed that neither Mathlib nor OpenAI's files contain:
    `HilbertCrouzeix` as support. Everything above is about `DirectCrouzeix`;
    `CompleteCrouzeix`, `StructuralCrouzeix` and `CrouzeixHilbert` (the
    arbitrary-Hilbert-space version) have not been rebuilt here. An earlier
-   comment in `family.env` called those three "support lemmas"; it was wrong.
+   comment in this family's config file called those three "support lemmas"; it was wrong.
 
 ## Files
 
 | file | what it is |
 |---|---|
-| [`family.env`](family.env) | configuration read by `../../recheck.sh` |
+| [`family.conf`](family.conf) | configuration read by `../../recheck.sh` |
 | [`Verify.lean`](Verify.lean) | gates C and D: `#print axioms` and the defeq check |
 | [`Scalar.lean`](Scalar.lean) | the scalar specialisation, derived and axiom-clean |
 | [`logs/`](logs) | actual output from the run described above |

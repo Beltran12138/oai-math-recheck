@@ -3,7 +3,7 @@
 #
 #   ./recheck.sh <family-number>        # e.g. ./recheck.sh 325
 #
-# Reads families/<n>/family.env, then:
+# Reads families/<n>/family.conf, then:
 #   1. sparse-checkouts just that family from openai/math at UPSTREAM_SHA
 #   2. refuses to continue if the family imports anything outside Mathlib
 #   3. generates a minimal lakefile  (upstream's requires ~30 external repos)
@@ -22,11 +22,11 @@ REPO_ROOT="$PWD"
 FAMILY_NUMBER="${1:-}"
 if [ -z "$FAMILY_NUMBER" ]; then sed -n '2,15p' "$0" >&2; exit 64; fi
 
-CONF="$REPO_ROOT/families/$FAMILY_NUMBER/family.env"
+CONF="$REPO_ROOT/families/$FAMILY_NUMBER/family.conf"
 [ -f "$CONF" ] || { echo "no config: $CONF" >&2; exit 64; }
 # shellcheck source=/dev/null
 . "$CONF"
-: "${FAMILY_DIR:?family.env must set FAMILY_DIR}"
+: "${FAMILY_DIR:?family.conf must set FAMILY_DIR}"
 
 WORK="${WORK:-$REPO_ROOT/.work/$FAMILY_NUMBER}"
 say() { printf '\n==> %s\n' "$*"; }
