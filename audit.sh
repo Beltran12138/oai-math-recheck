@@ -137,8 +137,11 @@ fi
 # Gate C is vacuous if we copied the definitions out of the *solution* instead
 # of the *challenge*: then it proves a thing by itself.  So diff them.
 gate D "definitions compared against the challenge are verbatim the challenge's"
-if [ -n "${COPIED_DEFS:-}" ] && [ -n "${COPIED_INTO:-}" ] && [ -n "${CHALLENGE:-}" ]; then
-  python3 - "$CHALLENGE" "$COPIED_INTO" $COPIED_DEFS <<'PY'
+# The definitions are compared against COPIED_FROM when set, else CHALLENGE.
+COPY_SRC="${COPIED_FROM:-${CHALLENGE:-}}"
+if [ -n "${COPIED_DEFS:-}" ] && [ -n "${COPIED_INTO:-}" ] && [ -n "$COPY_SRC" ]; then
+  echo "      against $COPY_SRC"
+  python3 - "$COPY_SRC" "$COPIED_INTO" $COPIED_DEFS <<'PY'
 import re, sys
 chal, mine, *names = sys.argv[1:]
 def grab(path):

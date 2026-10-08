@@ -94,10 +94,12 @@ TOP="${FAMILY_DIR%%/*}"
 rm -rf "$PROJ/$TOP" "$PROJ/ComparatorChallenges"
 mkdir -p "$PROJ/$(dirname "$FAMILY_DIR")"
 cp -R "$SRC/$FAMILY_DIR" "$PROJ/$(dirname "$FAMILY_DIR")/"
-if [ -n "${CHALLENGE:-}" ]; then
-  mkdir -p "$PROJ/$(dirname "$CHALLENGE")"
-  cp "$SRC/$CHALLENGE" "$PROJ/$CHALLENGE"
-fi
+# COPIED_FROM: a second challenge file whose definitions an audit file copies,
+# e.g. to check that one proof development closes another one's statement.
+for c in ${CHALLENGE:-} ${COPIED_FROM:-}; do
+  mkdir -p "$PROJ/$(dirname "$c")"
+  cp "$SRC/$c" "$PROJ/$c"
+done
 cp "$SRC/lean-toolchain" "$PROJ/lean-toolchain"
 DOCS="${DOCS_NUMBER:-$FAMILY_NUMBER}"   # 325-hilbert reads docs/325.md
 [ -f "$SRC/docs/$DOCS.md" ] && cp "$SRC/docs/$DOCS.md" "$PROJ/family-docs.md"
