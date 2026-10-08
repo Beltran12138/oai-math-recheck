@@ -11,7 +11,9 @@
 
 set -uo pipefail
 
-REPO_ROOT="$PWD"
+# Resolved from this script's own location, not $PWD: recheck.sh cd's into the
+# build directory before exec'ing us, so $PWD is the project, not the repo.
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FAMILY_NUMBER="${1:-}"
 [ -n "$FAMILY_NUMBER" ] || { sed -n '2,12p' "$0" >&2; exit 64; }
 PROJ="${2:-$REPO_ROOT/.work/$FAMILY_NUMBER/proj}"
@@ -32,11 +34,19 @@ skip() { printf '    SKIP  %s\n' "$1"; }
 gate A "OpenAI's proof compiles"
 BE=$(grep -o 'BUILD_EXIT=[0-9]*' build.log | tail -1 | cut -d= -f2)
 EL=$(grep -o 'ELAPSED_SECONDS=[0-9]*' build.log | tail -1 | cut -d= -f2)
-NFILES=$(find "$FAMILY_DIR" -name '*.lean' | wc -l | tr -d ' ')
-if [ "${BE:-1}" = "0" ]; then
-  ok "$NFILES/$NFILES files, exit 0, wall $((EL/60))m$((EL%60))s"
-else
+NSRC=$(find "$FAMILY_DIR" -name '*.lean' | wc -l | tr -d ' ')
+# `lake build` also exits 0 when a lean_lib glob matches nothing, so exit 0 on
+# its own would let this gate pass while measuring nothing.  The number that
+# earns the gate is the count of .olean files actually on disk; the count of
+# modules Lake reports building is informational, and is 0 on a cached re-run.
+NOLEAN=$(find .lake/build -path "*/$FAMILY_DIR/*" -name '*.olean' 2>/dev/null | wc -l | tr -d ' ')
+NBUILT=$(grep -cE "Built ${FAMILY_DIR//\//\.}\." build.log)
+if [ "${BE:-1}" != "0" ]; then
   no "build exit $BE"; grep -E '^error' build.log | head -3
+elif [ "${NOLEAN:-0}" != "$NSRC" ]; then
+  no "exit 0 but $NOLEAN .olean for $NSRC sources -- the build did not cover the family"
+else
+  ok "$NOLEAN/$NSRC modules compiled ($NBUILT built this run), exit 0, wall $((EL/60))m$((EL%60))s"
 fi
 
 # ============================================ B. axioms, via nothing of ours
