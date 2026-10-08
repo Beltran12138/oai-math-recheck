@@ -133,6 +133,25 @@ They are **not** a verdict on the mathematics. Three gaps remain:
    `{⟪u, Au⟫ : ‖u‖ = 1}`, and its 1×1 case is exactly `{A 0 0}` — the direction
    that matters, since a numerical range that were *too large* would raise the
    supremum and make the theorem *weaker*.
+
+   We also read the challenge against Theorem 1.1 of the preprint
+   (`preprints/A-direct-proof-of-the-complete-Crouzeix-inequality-September-26-2026/paper.pdf`,
+   sha256 `d9aa4ef2…199bb6`), clause by clause. This is reading, not a gate:
+
+   | Preprint, §1 | Challenge file |
+   |---|---|
+   | `P[A] = Σₖ Aᵏ ⊗ Bₖ`, "the base space ℂⁿ is the first tensor factor" | `tensorEvaluation`: `∑ k, (A ^ k) ⊗ₖ (B k)` on `Fin n × Fin m` |
+   | operator norms from the Euclidean inner products and their Hilbert tensor product | L2 operator norm, scoped over every index type, so it applies on `Fin n × Fin m` too |
+   | `max_{z ∈ W(A)} ‖P(z)‖` | `rangeMaximum`: `sSup` of the same set; equal to the max because `W(A)` is compact and non-empty when `0 < n` |
+   | every `n, m ≥ 1`, every `d ≥ 0`, `Bₖ ∈ Mₘ(ℂ)` | `UniversalBound`: `∀ n m d, 0 < n → 0 < m → ∀ A B` |
+   | "cannot be decreased uniformly over n, m, and d" | `uniform_sharpness : UniversalBound c → 2 ≤ c` |
+
+   We found no mismatch. What is left is the step from the preprint's "matrix
+   formulation" to the operator-algebra one in the literature (W(A) as a
+   complete 2-spectral set, tested on matrix-valued rational functions). For
+   compact convex `W(A)`, polynomial approximation (Runge/Mergelyan, entrywise)
+   makes the two equivalent. That is our own argument, and nothing in this
+   repository checks it.
 2. **This is not `comparator`.** OpenAI's own checker runs a solution against a
    challenge inside a `landrun` sandbox with an explicit `permitted_axioms`
    list; it needs Linux Landlock and `systemd-run`, and we did not run it. Our
