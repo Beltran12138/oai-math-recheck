@@ -89,28 +89,34 @@ not a mis-formalisation stating something vacuous. It is **not** evidence about
 the novel part — uniformity in `m` — and nothing here is. For that you have to
 read `UniversalBound` and decide for yourself.
 
-## What five runs of this cost us, and why it is the point
+## Why the gates are built the way they are
 
-The gates above are green. Getting them there took five runs, and four of the
-five problems were in *this* harness rather than in OpenAI's proof:
+A gate that cannot fail is worse than no gate, because it converts "we did not
+look" into "we looked and it was fine". Three features above exist only to
+guard against that: gate A counts compiled modules rather than trusting an exit
+code, gate E perturbs the statement to prove gate C can reject something, and
+gate G checks this page's quotations against the logs it cites.
 
-| found in | what it was | kind |
-|---|---|---|
-| run 1 | `audit.sh` took its repo root from `$PWD`, which `recheck.sh` had already changed, so it exited 64 before running a single gate | ordinary bug |
-| run 1 | gate A passed on `exit 0` and then printed `N/N` with `N` counted from the **source** files — it would have reported "42/42" for a build that compiled nothing | **a gate that could not fail** |
-| run 1 | `upload-artifact` skips dot-directories, so every log under `.work/` was dropped in silence | evidence lost |
-| run 3 | this write-up quoted the output of a `#print axioms` that was not in any file | **output nobody obtained** |
-| run 4 | the archived logs predated the line the write-up quoted off them, so the citation was impossible | **citation drift** |
+None of those were foresight. Each one is here because the thing it guards
+against had already happened, in a run whose number you can read off the commit
+history:
 
-Gate A's check and gate G both exist because of that list, and the negative
-controls exist because a gate that cannot fail is worse than no gate: it
-converts "we did not look" into "we looked and it was fine". OpenAI's 42 files
-compiled on the first try on both machines. Our checker needed four corrections
-before it was entitled to say so.
+| the question | what went wrong before the gate answered it |
+|---|---|
+| Did the build cover the family, or merely exit 0? | Gate A passed on `exit 0` and printed `N/N` with `N` counted from the **source** files. It would have reported "42/42" for a build that compiled nothing. |
+| Can gate C reject anything at all? | Nothing checked, until gate E weakened the constant and required the file to stop compiling. |
+| Is a quoted log line in a log we have? | This page quoted a `#print axioms` that no file contained, and then quoted two lines off an archived log produced *before* those lines existed. Both readings looked right. |
+| Did the harness run at all? | `audit.sh` took its repo root from `$PWD`, which `recheck.sh` had already changed, and exited 64 before reaching a single gate. |
+| Is the evidence still there afterwards? | `upload-artifact` skips dot-directories, so every log under `.work/` was dropped in silence. |
 
-That is the argument for this repository, and it is not that formalisations
+Five findings across six runs, and four of the five were in *this* harness, not
+in OpenAI's proof — their 42 files compiled on the first attempt on both
+machines. The checker needed four corrections before it was entitled to say so.
+
+Which is the argument for this repository, and it is not that formalisations
 fail to compile. It is that a formalisation with no CI leaves nothing to tell
-you when your *checker* is lying — and a checker will.
+you when your *checker* is lying — and a checker will. Trusting one that has
+never been made to fail is the part worth worrying about.
 
 ## What these gates do and do not show
 
