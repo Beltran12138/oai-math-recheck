@@ -1,0 +1,11 @@
+# Everything recheck.sh fetches and builds. In particular .work/upstream is a
+# checkout of openai/math; it is deliberately not tracked here.
+.work/
+
+.lake/
+*.olean
+*.olean.private
+*.ilean
+*.hash
+.axcheck.lean
+.NegControl.lean

@@ -1,0 +1,32 @@
+oai-math-recheck
+Copyright 2026 the oai-math-recheck authors
+
+Licensed under the Apache License, Version 2.0.
+
+-------------------------------------------------------------------------------
+
+This repository contains no source code from openai/math.
+
+`recheck.sh` fetches the files it checks directly from
+https://github.com/openai/math at a pinned commit
+(adc7f1241b42e322a6451854ab7e4b4c146bf78a) into an untracked `.work/`
+directory. Those files are:
+
+    Copyright OpenAI
+    Licensed under the Apache License, Version 2.0
+    https://github.com/openai/math/blob/main/LICENSE
+
+The short excerpts that appear in the README files of this repository — the
+statement of `UniversalBound`, the two theorem signatures, and the five
+definitions they depend on — are quoted for the purpose of identifying what is
+being checked.
+
+`families/*/Verify.lean` deliberately re-declares the definitions from the
+corresponding `ComparatorChallenges` file verbatim. That is not incidental
+copying: the whole point of the definitional-equality gate is that the two
+declarations are textually identical, and `audit.sh` gate D fails if they ever
+drift apart.
+
+Mathlib4 (https://github.com/leanprover-community/mathlib4) and the Lean 4
+toolchain are downloaded by `lake` and `elan` at the revisions pinned by
+upstream; both are Apache-2.0.

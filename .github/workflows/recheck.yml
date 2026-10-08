@@ -1,0 +1,62 @@
+name: recheck
+
+# The point of this workflow: openai/math ships no CI, so there is no run
+# anyone can point at. This produces one. It is slow on purpose — it builds
+# OpenAI's proof from their pinned Mathlib, it does not cache their output.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      family:
+        description: result family number to re-check
+        default: "325"
+      upstream_sha:
+        description: openai/math commit to pin (blank = the one in recheck.sh)
+        default: ""
+  schedule:
+    # Monthly, so that a Mathlib or toolchain change that breaks the build
+    # shows up here rather than in someone's first attempt.
+    - cron: "17 4 1 * *"
+
+jobs:
+  recheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: install elan
+        run: |
+          curl -sSfL https://github.com/leanprover/elan/releases/download/v4.1.2/elan-x86_64-unknown-linux-gnu.tar.gz \
+            | tar xz
+          ./elan-init -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: disk and memory available
+        run: |
+          df -h / | tail -1
+          free -g | head -2
+
+      - name: recheck
+        env:
+          FAMILY: ${{ github.event.inputs.family || '325' }}
+          UPSTREAM_SHA_IN: ${{ github.event.inputs.upstream_sha }}
+        run: |
+          if [ -n "$UPSTREAM_SHA_IN" ]; then export UPSTREAM_SHA="$UPSTREAM_SHA_IN"; fi
+          chmod +x recheck.sh audit.sh
+          ./recheck.sh "$FAMILY"
+
+      - name: logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-family-${{ github.event.inputs.family || '325' }}
+          path: |
+            .work/*/proj/build.log
+            .work/*/proj/cache.log
+            .work/*/proj/axioms.log
+            .work/*/proj/verify.log
+          if-no-files-found: warn
