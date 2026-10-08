@@ -51,6 +51,22 @@ theorem scalar_crouzeix {n : ℕ} (hn : 0 < n) (A : Matrix (Fin n) (Fin n) ℂ)
     ‖(Polynomial.aeval A) p‖ ≤ 2 * sSup ((fun z => ‖p.eval z‖) '' numericalRange A)
 ```
 
+### Second statement in the same family: `CrouzeixHilbert`
+
+[→ write-up](families/325-hilbert/README.md)
+
+`lean/docs/325.md` links five comparator files for family 325, and only one of
+them is labelled support. The table above is about `DirectCrouzeix`.
+[`families/325-hilbert`](families/325-hilbert) rebuilds a second one,
+`CrouzeixHilbert`: 90 files, every gate passing on GitHub Actions run
+[37751095037](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37751095037).
+Its statement is for bounded operators on any complex Hilbert space and covers
+matrix-valued rational and holomorphic functions, the form the literature
+uses. The statement contains `structure`s, so gate C there compares the
+elaborated challenge and solution the way `comparator` does
+([`tools/StatementDump.lean`](tools/StatementDump.lean)) instead of by copy and
+defeq. `CompleteCrouzeix` and `StructuralCrouzeix` are not covered.
+
 ## What family 325 actually claims — read this before quoting any of it
 
 The headline going around is that OpenAI resolved Crouzeix's conjecture. That
@@ -113,6 +129,14 @@ Five findings across six runs, and four of the five were in *this* harness, not
 in OpenAI's proof — their 42 files compiled on the first attempt on both
 machines. The checker needed four corrections before it was entitled to say so.
 
+Adding the second statement found three more problems, again all in this
+harness and none in OpenAI's 90 files: an empty dump on both sides that read as
+"identical", a parser that glued two adjacent declarations together, and
+binder names carrying the module they were elaborated in. They are listed in
+[`families/325-hilbert/README.md`](families/325-hilbert/README.md). Teaching
+gate G to check `audit.sh`'s own verdict lines then turned up one more in the
+write-up: 325's page quoted gate G's verdict, which no archived log contained.
+
 Which is the argument for this repository, and it is not that formalisations
 fail to compile. It is that a formalisation with no CI leaves nothing to tell
 you when your *checker* is lying — and a checker will. Trusting one that has
@@ -120,9 +144,10 @@ never been made to fail is the part worth worrying about.
 
 ## What these gates do and do not show
 
-They show that the Lean development in family 325 compiles, contains no `sorry`,
-introduces no axiom, does not disable the kernel, and proves a proposition
-definitionally equal to the one in the comparator challenge file.
+For the two statements covered, `DirectCrouzeix` and `CrouzeixHilbert`, they
+show that the Lean development compiles, contains no `sorry`, introduces no
+axiom, does not disable the kernel, and proves the proposition in the
+comparator challenge file.
 
 They are **not** a verdict on the mathematics. Three gaps remain:
 
@@ -151,7 +176,10 @@ They are **not** a verdict on the mathematics. Three gaps remain:
    complete 2-spectral set, tested on matrix-valued rational functions). For
    compact convex `W(A)`, polynomial approximation (Runge/Mergelyan, entrywise)
    makes the two equivalent. That is our own argument, and nothing in this
-   repository checks it.
+   repository checks it for `DirectCrouzeix`. `CrouzeixHilbert` does not need
+   it: its formal statement includes the bound for matrix-valued rational
+   functions with poles outside the closure of the numerical range, and its
+   proof compiles ([write-up](families/325-hilbert/README.md)).
 2. **This is not `comparator`.** OpenAI's own checker runs a solution against a
    challenge inside a `landrun` sandbox with an explicit `permitted_axioms`
    list; it needs Linux Landlock and `systemd-run`, and we did not run it. Our
@@ -209,8 +237,9 @@ If the family imports anything outside Mathlib, `recheck.sh` stops and says
 what. That is a result, not an obstacle: it means that family cannot be checked
 without the upstream dependency tangle, and it is worth reporting.
 
-Gates D and E only apply to families where someone has hand-written a
-`Verify.lean`, and gate G to families with a `README.md` and archived `logs/`.
+Gates C to E need either a hand-written `Verify.lean` (as in 325) or
+`CHALLENGE_MODULE` and `NEG_KIND=dump` in `family.conf` (as in 325-hilbert,
+which needs no Lean of ours). Gate G needs a `README.md` and archived `logs/`.
 Without any of those you get gates A, B and F, which is already more than the
 repository currently demonstrates about itself.
 

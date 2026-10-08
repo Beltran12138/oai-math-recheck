@@ -255,7 +255,8 @@ blob = '\n'.join(blob)
 
 # Only lines that are recognisably tool output, inside a fenced block.
 LOOKS_LIKE_OUTPUT = re.compile(
-    r'depends on axioms|^\s*(info|warning|error):|^\s*[✔✖ℹ⚠]\s*\[|^\s*Build completed')
+    r'depends on axioms|^\s*(info|warning|error):|^\s*[✔✖ℹ⚠]\s*\[|^\s*Build completed'
+    r'|^\s*(PASS|FAIL|SKIP)\s')   # this script's own verdict lines, from gates.log
 quoted, fenced = [], False
 for line in open(readme, encoding='utf-8').read().splitlines():
     if line.lstrip().startswith('```'):

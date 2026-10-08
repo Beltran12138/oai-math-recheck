@@ -1,0 +1,3 @@
+⚠ [8924/8924] Built ComparatorChallenges.CrouzeixHilbert (6.8s)
+warning: ComparatorChallenges/CrouzeixHilbert.lean:148:8: declaration uses `sorry`
+Build completed successfully (8924 jobs).

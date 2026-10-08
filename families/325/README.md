@@ -156,11 +156,13 @@ with no local modifications.
 ### G — the write-up quotes logs it actually has
 
 Every line this page shows inside a code fence that looks like Lean or Lake
-output is checked, verbatim, against the files under [`logs/`](logs):
+output, or like one of `audit.sh`'s own PASS / FAIL / SKIP lines, is checked
+verbatim against the files under [`logs/`](logs). All four pass.
 
-```
-    PASS  4/4 quoted lines verbatim in logs/
-```
+Gate G's own verdict line is deliberately not quoted here. An earlier version
+did quote it, and once the gate learned to check verdict lines it flagged that
+quote: the archived `gates.log` predates gate G, and a quote of the gate's
+count changes the count it reports.
 
 This gate exists because an earlier version of this page quoted two
 `#print axioms` lines off an archived log that was produced *before*
