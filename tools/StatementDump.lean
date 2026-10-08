@@ -38,11 +38,27 @@ def refsOf (ci : ConstantInfo) : Array Name :=
   | .inductInfo d => fromType ++ d.ctors.toArray
   | _ => fromType
 
+/-- Compare up to alpha-equivalence, as Lean's own `Expr` equality does.  Binder
+names are not part of what a term means, and the auto-generated name of an
+anonymous instance binder embeds the module it was elaborated in
+(`inst._@.ComparatorChallenges.CrouzeixHilbert.…` vs `inst._@.OAI.Analysis.…`),
+so leaving them in made identical statements dump differently. -/
+partial def eraseBinderNames : Expr → Expr
+  | .forallE _ t b bi => .forallE `_ (eraseBinderNames t) (eraseBinderNames b) bi
+  | .lam _ t b bi => .lam `_ (eraseBinderNames t) (eraseBinderNames b) bi
+  | .letE _ t v b nd => .letE `_ (eraseBinderNames t) (eraseBinderNames v) (eraseBinderNames b) nd
+  | .app f a => .app (eraseBinderNames f) (eraseBinderNames a)
+  | .mdata m e => .mdata m (eraseBinderNames e)
+  | .proj s i e => .proj s i (eraseBinderNames e)
+  | e => e
+
+def render (e : Expr) : String := (eraseBinderNames e).dbgToString
+
 def line (ci : ConstantInfo) : String :=
-  let base := s!"{ci.name}\t{kindOf ci}\t{ci.levelParams}\ttype={ci.type.dbgToString}"
+  let base := s!"{ci.name}\t{kindOf ci}\t{ci.levelParams}\ttype={render ci.type}"
   match ci with
-  | .defnInfo d => base ++ s!"\tvalue={d.value.dbgToString}"
-  | .opaqueInfo d => base ++ s!"\tvalue={d.value.dbgToString}"
+  | .defnInfo d => base ++ s!"\tvalue={render d.value}"
+  | .opaqueInfo d => base ++ s!"\tvalue={render d.value}"
   | .inductInfo d =>
     base ++ s!"\tparams={d.numParams}\tindices={d.numIndices}\tctors={d.ctors}\trec={d.isRec}"
   | _ => base
