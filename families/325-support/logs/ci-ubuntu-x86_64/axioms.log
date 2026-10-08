@@ -1,0 +1,4 @@
+'OAI.HilbertCrouzeix.numericalClosure_geometry' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OAI.HilbertCrouzeix.exists_finite_compression' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OAI.HilbertCrouzeix.rational_denominator_isUnit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'OAI.HilbertCrouzeix.zeroConclusion' depends on axioms: [propext, Classical.choice, Quot.sound]

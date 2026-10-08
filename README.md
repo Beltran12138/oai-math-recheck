@@ -95,7 +95,10 @@ Every gate passes (run
 
 That covers all four substantive comparator statements of family 325. The
 fifth comparator file, `HilbertCrouzeix`, is the one the family page labels as
-support, and it is not rebuilt here.
+support: four lemmas, one of them the zero-space case. It is rebuilt too, in
+[`families/325-support`](families/325-support/README.md) (run
+[37774827283](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37774827283)),
+so every comparator file of family 325 now has a passing re-check.
 
 ## What family 325 actually claims — read this before quoting any of it
 

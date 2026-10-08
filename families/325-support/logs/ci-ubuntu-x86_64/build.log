@@ -1,0 +1,10 @@
+✔ [8924/8931] Built OAI.Analysis.HilbertCrouzeix.Definitions (8.0s)
+✔ [8925/8931] Built OAI.Analysis.HilbertCrouzeix.NumericalRange (5.8s)
+✔ [8926/8931] Built OAI.Analysis.HilbertCrouzeix.Spectrum (5.6s)
+✔ [8927/8931] Built OAI.Analysis.HilbertCrouzeix.Compression (11s)
+✔ [8928/8931] Built OAI.Analysis.HilbertCrouzeix.Calculus (6.9s)
+✔ [8929/8931] Built OAI.Analysis.HilbertCrouzeix.Sharpness (6.6s)
+✔ [8930/8931] Built OAI.Analysis.HilbertCrouzeix.Main (3.4s)
+Build completed successfully (8931 jobs).
+BUILD_EXIT=0
+ELAPSED_SECONDS=40
