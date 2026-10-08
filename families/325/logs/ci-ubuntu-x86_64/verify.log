@@ -1,0 +1,37 @@
+ℹ [8966/8967] Built Verify (5.6s)
+info: Verify.lean:27:0: complete_crouzeix : UniversalBound 2
+info: Verify.lean:28:0: uniform_sharpness : ∀ (c : ℝ), UniversalBound c → 2 ≤ c
+info: Verify.lean:36:0: 'OAI.DirectCrouzeix.complete_crouzeix' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Verify.lean:37:0: 'OAI.DirectCrouzeix.uniform_sharpness' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (8967 jobs).
+⚠ [8966/8967] Built Scalar (17s)
+warning: Scalar.lean:88:46: This simp argument is unused:
+  Matrix.kronecker_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [tensorEvaluation, Matrix.sum_apply, Matrix.one_apply, mul_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Scalar.lean:88:70: This simp argument is unused:
+  Matrix.one_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [tensorEvaluation, Matrix.sum_apply, Matrix.kronecker_apply, mul_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Scalar.lean:92:10: This simp argument is unused:
+  Matrix.kronecker_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.one_apply, Matrix.sum_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Scalar.lean:92:34: This simp argument is unused:
+  Matrix.one_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [Matrix.kronecker_apply, Matrix.sum_apply]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: Scalar.lean:132:29: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead
+Build completed successfully (8967 jobs).

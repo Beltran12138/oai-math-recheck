@@ -85,11 +85,11 @@ lemma tensorEvaluation_scalar {n d : ℕ} (A : Matrix (Fin n) (Fin n) ℂ)
   have hL : tensorEvaluation A
       (fun t : Fin (d + 1) => p.coeff t • (1 : Matrix (Fin 1) (Fin 1) ℂ)) (i, 0) (k, 0)
       = ∑ t : Fin (d + 1), p.coeff (t : ℕ) * (A ^ (t : ℕ)) i k := by
-    simp [tensorEvaluation, Matrix.sum_apply, Matrix.kronecker_apply, Matrix.one_apply, mul_comm]
+    simp [tensorEvaluation, Matrix.sum_apply, mul_comm]
   have hR : ((Polynomial.aeval A p) ⊗ₖ (1 : Matrix (Fin 1) (Fin 1) ℂ)) (i, 0) (k, 0)
       = ∑ t ∈ Finset.range (d + 1), p.coeff t * (A ^ t) i k := by
     rw [Polynomial.aeval_eq_sum_range' hd]
-    simp [Matrix.kronecker_apply, Matrix.one_apply, Matrix.sum_apply]
+    simp [Matrix.sum_apply]
   rw [hL, hR, Fin.sum_univ_eq_sum_range (fun t => p.coeff t * (A ^ t) i k) (d + 1)]
 
 /-! ### Step 3: the classical statement -/

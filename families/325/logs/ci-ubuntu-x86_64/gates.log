@@ -1,0 +1,65 @@
+##[group]Run if [ -n "$UPSTREAM_SHA_IN" ]; then export UPSTREAM_SHA="$UPSTREAM_SHA_IN"; fi
+if [ -n "$UPSTREAM_SHA_IN" ]; then export UPSTREAM_SHA="$UPSTREAM_SHA_IN"; fi
+chmod +x recheck.sh audit.sh
+./recheck.sh "$FAMILY"
+shell: /usr/bin/bash -e {0}
+env:
+  FAMILY: 325
+  UPSTREAM_SHA_IN: 
+##[endgroup]
+
+==> fetching OAI/Analysis/DirectCrouzeix from openai/math @ adc7f1241b42
+    42 files, 7389 lines
+
+==> checking the family imports nothing beyond Mathlib
+    ok: Mathlib only
+
+==> assembling a minimal Lake project
+    mathlib -> d13f23b723b8  (read from upstream manifest)
+    copied 2 audit file(s)
+
+==> lake exe cache get
+
+==> lake build OAI   (this is OpenAI's proof; none of our code is in it)
+    exit=0  wall=5m19s
+
+==> handing off to audit.sh
+
+--- gate A: OpenAI's proof compiles
+    PASS  42/42 modules compiled (42 built this run), exit 0, wall 5m19s
+
+--- gate B: the headline theorems rest on no axiom beyond the standard three
+      'OAI.DirectCrouzeix.complete_crouzeix' depends on axioms: [propext, Classical.choice, Quot.sound]
+      'OAI.DirectCrouzeix.uniform_sharpness' depends on axioms: [propext, Classical.choice, Quot.sound]
+    PASS  2/2 theorems: [propext, Classical.choice, Quot.sound], no sorry
+
+--- gate C: what is proved is the statement in the comparator challenge
+    PASS  Verify Scalar built; the defeq checks inside them went through
+
+--- gate D: definitions we re-declared are verbatim the challenge's
+      same  numericalRange
+      same  polynomialValue
+      same  tensorEvaluation
+      same  rangeMaximum
+      same  UniversalBound
+    PASS  5/5 verbatim identical
+
+--- gate E: negative control: a wrong constant must be rejected
+    PASS  rejected: .NegControl.lean:118:48: error: Application type mismatch: The argumen
+
+--- gate F: no kernel bypass, no custom axioms, dependencies untouched
+      set_option             0
+      ^axiom                 0
+      native_decide          0
+      \bunsafe\b             0
+      implemented_by         0
+      @\[extern              0
+      Lean\.ofReduceBool     0
+      #exit                  0
+      ^(macro|elab|syntax)   0
+    PASS  none of the above appear in OAI/Analysis/DirectCrouzeix
+    PASS  all Lake packages match their pinned revisions
+      toolchain: leanprover/lean4:v4.34.1
+
+===> family 325: ALL GATES PASSED
+     logs: /home/runner/work/oai-math-recheck/oai-math-recheck/.work/325/proj/{build,axioms,verify}.log

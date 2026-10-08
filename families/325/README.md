@@ -61,14 +61,39 @@ Three things follow.
 
 ## Gate results
 
-Apple M4 / 10 cores / 16 GB / macOS 26.5.2, Lean `v4.34.1`, Mathlib
-`d13f23b723b8a846827a245b89c10fc7d3f11612` (the revision upstream's own
-`lake-manifest.json` pins).
+All six gates pass on both of two machines of different architecture, on Lean
+`v4.34.1` against Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612` — the
+revision upstream's own `lake-manifest.json` pins, read out of that file by
+`recheck.sh` rather than hard-coded here:
+
+| | Apple M4, 10 cores, 16 GB, macOS 26.5.2 | `ubuntu-24.04`, x86_64, 7 GB |
+|---|---|---|
+| run | local, 2026-10-07 | [Actions run 37721195947](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37721195947) |
+| `lake build` | 36m48s | 5m19s |
+| gates A–F | all pass | all pass |
+| raw output | [`logs/`](logs) | [`logs/ci-ubuntu-x86_64/`](logs/ci-ubuntu-x86_64) |
+
+The second run is the one worth pointing at, because its log is public and it
+ran on a machine neither of us controls. It is also the run that found three
+bugs in this harness, including a gate A that would have reported "42/42" on a
+build that compiled nothing — see that gate below.
 
 ### A — it compiles
 
-42/42 files, `exit 0`, **36m48.120s** wall. Each file takes about 50 s and they
-build serially; see [`logs/build.log`](logs/build.log).
+42/42 files, `exit 0`, **36m48.120s** wall; see [`logs/build.log`](logs/build.log),
+which carries one `Built OAI.Analysis.DirectCrouzeix.…` line per file (Lake jobs
+8924–8965) and `Build completed successfully (8966 jobs)`.
+
+The number that closes this gate is the count of `.olean` files on disk, not the
+build's exit status: `lake build` also exits 0 when a `lean_lib` glob matches
+nothing, and an earlier version of `audit.sh` would have reported "42/42" in
+that case because it counted the *source* files. It now fails unless the
+compiled modules account for every source file.
+
+Note the CPU split in that log — `user 2m10s`, `sys 3m47s`, against 36m48s of
+wall clock. Seven minutes of work and half an hour of waiting: the cost here is
+re-reading Mathlib's `.olean` files once per Lean process, so this number says
+much more about the machine's memory and disk than about the proof.
 
 ### B — axioms
 

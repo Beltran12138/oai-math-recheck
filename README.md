@@ -1,5 +1,7 @@
 # oai-math-recheck
 
+[![recheck](https://github.com/Beltran12138/oai-math-recheck/actions/workflows/recheck.yml/badge.svg)](https://github.com/Beltran12138/oai-math-recheck/actions/workflows/recheck.yml)
+
 Re-check individual result families from [openai/math](https://github.com/openai/math)
 yourself, without building the other 721 manuscripts.
 
@@ -23,9 +25,14 @@ build down to the family you actually want.
 
 [→ full write-up, including what the claim is and is not](families/325/README.md)
 
+Run twice, on two architectures, with every gate passing both times: once on an
+Apple M4 (arm64, macOS 26.5.2) and once on a GitHub-hosted `ubuntu-24.04`
+runner (x86_64, 7 GB RAM) — the badge above is that second run, and its log is
+public.
+
 | gate | what it establishes | result |
 |---|---|---|
-| A | OpenAI's 42 files compile against the Mathlib they pin | **42/42, exit 0**, 36m48s wall |
+| A | OpenAI's 42 files compile against the Mathlib they pin | **42/42 `.olean` on disk, exit 0**, 36m48s / 5m19s wall |
 | B | the two headline theorems use no axiom beyond the standard three | **`[propext, Classical.choice, Quot.sound]`**, no `sorryAx` |
 | C | what is proved is the statement in the comparator challenge file | **pass** (definitional equality) |
 | D | the definitions we re-declared to make gate C possible are verbatim the challenge's | **5/5 identical** |
@@ -127,10 +134,22 @@ than the repository's 780 MB.
 UPSTREAM_SHA=<sha> ./recheck.sh 325    # pin a different upstream commit
 ```
 
-Timing, for calibration (Apple M4, 10 cores, 16 GB, macOS 26.5.2): 42 files,
-about 50 s each, built serially — 36m48s wall. The wall clock is dominated by
-re-loading Mathlib's `.olean` files once per file, not by checking the proof,
-so a machine with more memory should do noticeably better.
+Timing, for calibration. The two runs differ by 7×, and the difference is
+almost entirely paging, not proof-checking:
+
+| | Apple M4, 16 GB, macOS 26.5.2 | `ubuntu-24.04` runner, 7 GB, x86_64 |
+|---|---|---|
+| `lake exe cache get` | — | 2m53s |
+| `lake build` | **36m48s** (`user` 2m11s, `sys` 3m48s) | **5m19s** |
+| first file (`Model`) | 67 s | 45 s |
+| every later file | 47–67 s, flat | **3.7–11 s** |
+
+Six minutes of CPU inside thirty-seven of wall clock, and a per-file cost that
+never drops after the first file, is the signature of re-reading Mathlib's
+`.olean` files once per Lean process. On the runner only the first file pays
+that, and the rest are 5–10× cheaper. So this number measures the machine's
+page cache, not the difficulty of the proof — do not read it as a proxy for
+either.
 
 ## Adding a family
 
