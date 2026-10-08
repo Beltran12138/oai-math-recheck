@@ -122,6 +122,13 @@ example (c : ℝ) (hc : UniversalBound c) : 2 ≤ c := uniform_sharpness c hc
 Both elaborate, so the proposition proved is definitionally the proposition
 posed.
 
+Since run
+[37755867541](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37755867541)
+gate C also runs a second check that goes through no file of ours: the
+comparator-style dump described in [`../325-hilbert`](../325-hilbert), which
+finds the challenge and the solution identical over 11 constants. The logs
+archived on this page predate it.
+
 ### D — the re-declared definitions are really theirs
 
 Gate C would prove nothing if we had copied the definitions out of the
@@ -241,10 +248,12 @@ needed that neither Mathlib nor OpenAI's files contain:
    a separate question, and a referee's rather than ours.
 4. **This is one of the family's four substantive comparator statements.**
    `lean/docs/325.md` links five comparator files and labels only
-   `HilbertCrouzeix` as support. Everything above is about `DirectCrouzeix`;
-   `CompleteCrouzeix`, `StructuralCrouzeix` and `CrouzeixHilbert` (the
-   arbitrary-Hilbert-space version) have not been rebuilt here. An earlier
-   comment in this family's config file called those three "support lemmas"; it was wrong.
+   `HilbertCrouzeix` as support. Everything above is about `DirectCrouzeix`.
+   `CrouzeixHilbert` (the arbitrary-Hilbert-space version) is in
+   [`../325-hilbert`](../325-hilbert) and `CompleteCrouzeix` in
+   [`../325-complete`](../325-complete); `StructuralCrouzeix` is not covered.
+   An earlier comment in this family's config file called those three
+   "support lemmas"; it was wrong.
 
 ## Files
 

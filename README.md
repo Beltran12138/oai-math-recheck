@@ -65,7 +65,23 @@ matrix-valued rational and holomorphic functions, the form the literature
 uses. The statement contains `structure`s, so gate C there compares the
 elaborated challenge and solution the way `comparator` does
 ([`tools/StatementDump.lean`](tools/StatementDump.lean)) instead of by copy and
-defeq. `CompleteCrouzeix` and `StructuralCrouzeix` are not covered.
+defeq.
+
+### Third statement: `CompleteCrouzeix`, cross-checked
+
+[→ write-up](families/325-complete/README.md)
+
+`CompleteCrouzeix` states the same inequality as `DirectCrouzeix`, spelled
+differently, and OpenAI proves it in a separate 48-file development.
+[`families/325-complete`](families/325-complete) rebuilds it (every gate
+passing, run
+[37755867541](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37755867541))
+and also asks Lean whether that proof closes `DirectCrouzeix`'s challenge
+statement, copied verbatim. It does: the two developments prove one
+proposition up to definitional unfolding. That is agreement between two OpenAI
+formalisations, not independence from OpenAI.
+
+`StructuralCrouzeix`, the fourth substantive statement, is not covered.
 
 ## What family 325 actually claims — read this before quoting any of it
 
@@ -144,7 +160,8 @@ never been made to fail is the part worth worrying about.
 
 ## What these gates do and do not show
 
-For the two statements covered, `DirectCrouzeix` and `CrouzeixHilbert`, they
+For the three statements covered, `DirectCrouzeix`, `CrouzeixHilbert` and
+`CompleteCrouzeix`, they
 show that the Lean development compiles, contains no `sorry`, introduces no
 axiom, does not disable the kernel, and proves the proposition in the
 comparator challenge file.

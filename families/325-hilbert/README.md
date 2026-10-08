@@ -6,8 +6,8 @@ Upstream: [openai/math](https://github.com/openai/math) @
 · proof `lean/OAI/Analysis/Crouzeix/` (90 files, 15 655 lines)
 · family page `lean/docs/325.md`, which links five comparator files for this
 family. [`../325`](../325) covers `DirectCrouzeix`; this page covers
-`CrouzeixHilbert`. `CompleteCrouzeix` and `StructuralCrouzeix` are not covered
-by either.
+`CrouzeixHilbert`, and [`../325-complete`](../325-complete) covers
+`CompleteCrouzeix`. `StructuralCrouzeix` is not covered.
 
 ## Why this statement
 

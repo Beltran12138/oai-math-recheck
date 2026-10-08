@@ -1,0 +1,9 @@
+GitHub Actions run 37755867541, job 113240138443
+https://github.com/Beltran12138/oai-math-recheck/actions/runs/37755867541
+ubuntu-24.04 x86_64, 7 GB RAM, Lean v4.34.1, mathlib d13f23b723b8
+repo at commit c71e3c0, openai/math at adc7f1241b42
+
+dump-solution.txt is byte-identical to dump-challenge.txt, so only the
+challenge dump is kept (gzipped):
+  sha256 64cbf56733e696f4f3f74debdd5c39759952af0eafab44af93e8107f375cba17  dump-challenge.txt
+  sha256 64cbf56733e696f4f3f74debdd5c39759952af0eafab44af93e8107f375cba17  dump-solution.txt
