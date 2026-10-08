@@ -7,7 +7,8 @@ Upstream: [openai/math](https://github.com/openai/math) @
 · family page `lean/docs/325.md`, which links five comparator files for this
 family. [`../325`](../325) covers `DirectCrouzeix`; this page covers
 `CrouzeixHilbert`, and [`../325-complete`](../325-complete) covers
-`CompleteCrouzeix`. `StructuralCrouzeix` is not covered.
+`CompleteCrouzeix`, and [`../325-structural`](../325-structural) covers
+`StructuralCrouzeix`.
 
 ## Why this statement
 

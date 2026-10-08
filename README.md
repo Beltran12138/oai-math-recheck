@@ -81,7 +81,21 @@ statement, copied verbatim. It does: the two developments prove one
 proposition up to definitional unfolding. That is agreement between two OpenAI
 formalisations, not independence from OpenAI.
 
-`StructuralCrouzeix`, the fourth substantive statement, is not covered.
+### Fourth statement: `StructuralCrouzeix`
+
+[→ write-up](families/325-structural/README.md)
+
+The structural result: optimal similarity with condition number at most 2 and
+one positive boundary density representing the calculus, for matrices whose
+numerical range lies in a convex domain with real-analytic boundary. Its
+12-file proof is built on the `NumericalRange` development, which the
+dependency check refused until `family.conf` declared it in `EXTRA_DIRS`.
+Every gate passes (run
+[37759685861](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37759685861)).
+
+That covers all four substantive comparator statements of family 325. The
+fifth comparator file, `HilbertCrouzeix`, is the one the family page labels as
+support, and it is not rebuilt here.
 
 ## What family 325 actually claims — read this before quoting any of it
 
@@ -160,8 +174,8 @@ never been made to fail is the part worth worrying about.
 
 ## What these gates do and do not show
 
-For the three statements covered, `DirectCrouzeix`, `CrouzeixHilbert` and
-`CompleteCrouzeix`, they
+For the four statements covered, `DirectCrouzeix`, `CrouzeixHilbert`,
+`CompleteCrouzeix` and `StructuralCrouzeix`, they
 show that the Lean development compiles, contains no `sorry`, introduces no
 axiom, does not disable the kernel, and proves the proposition in the
 comparator challenge file.

@@ -251,7 +251,8 @@ needed that neither Mathlib nor OpenAI's files contain:
    `HilbertCrouzeix` as support. Everything above is about `DirectCrouzeix`.
    `CrouzeixHilbert` (the arbitrary-Hilbert-space version) is in
    [`../325-hilbert`](../325-hilbert) and `CompleteCrouzeix` in
-   [`../325-complete`](../325-complete); `StructuralCrouzeix` is not covered.
+   [`../325-complete`](../325-complete), and `StructuralCrouzeix` in
+   [`../325-structural`](../325-structural).
    An earlier comment in this family's config file called those three
    "support lemmas"; it was wrong.
 

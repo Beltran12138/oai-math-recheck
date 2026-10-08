@@ -1,0 +1,70 @@
+##[group]Run if [ -n "$UPSTREAM_SHA_IN" ]; then export UPSTREAM_SHA="$UPSTREAM_SHA_IN"; fi
+[36;1mif [ -n "$UPSTREAM_SHA_IN" ]; then export UPSTREAM_SHA="$UPSTREAM_SHA_IN"; fi[0m
+[36;1mchmod +x recheck.sh audit.sh[0m
+[36;1m./recheck.sh "$FAMILY"[0m
+shell: /usr/bin/bash -e {0}
+env:
+  FAMILY: 325-structural
+  UPSTREAM_SHA_IN: 
+##[endgroup]
+
+==> fetching OAI/Analysis/StructuralCrouzeix from openai/math @ adc7f1241b42
+    12 files, 1050 lines
+
+==> checking the family imports nothing beyond Mathlib
+    ok: Mathlib only
+
+==> assembling a minimal Lake project
+    mathlib -> d13f23b723b8  (read from upstream manifest)
+    no audit files for this family -- build-only re-check
+
+==> lake exe cache get
+
+==> lake build OAI   (this is OpenAI's proof; none of our code is in it)
+    exit=0  wall=6m55s
+
+==> handing off to audit.sh
+
+--- gate A: OpenAI's proof compiles
+    PASS  12/12 modules compiled (12 built this run), exit 0, wall 6m55s
+
+--- gate B: the headline theorems rest on no axiom beyond the standard three
+      'OAI.StructuralCrouzeixReference.challenge' depends on axioms: [propext, Classical.choice, Quot.sound]
+    PASS  1/1 theorems: [propext, Classical.choice, Quot.sound], no sorry
+
+--- gate C: what is proved is the statement in the comparator challenge
+    PASS  53 constants identical after elaboration (types, universe params, definition bodies)
+
+--- gate D: definitions compared against the challenge are verbatim the challenge's
+      against ComparatorChallenges/StructuralCrouzeix.lean
+      same  RegularAnalyticBoundaryAt
+      same  IsAdmissible
+      same  IsMinimizing
+      same  StrictlyFeasible
+      same  analyticSupNorm
+      same  boundaryPoint
+      same  FullEndpoint
+    PASS  7/7 verbatim identical
+
+--- gate E: negative control: a wrong constant must be rejected
+    PASS  rejected: differs in OAI.StructuralCrouzeix.FullEndpoint OAI.StructuralCrouzeix.FullEndpoint._proof_1 
+
+--- gate F: no kernel bypass, no custom axioms, dependencies untouched
+      set_option             0
+      ^axiom                 0
+      native_decide          0
+      \bunsafe\b             0
+      implemented_by         0
+      @\[extern              0
+      Lean\.ofReduceBool     0
+      #exit                  0
+      ^(macro|elab|syntax)   0
+    PASS  none of the above appear in OAI/Analysis/StructuralCrouzeix OAI/Analysis/NumericalRange
+    PASS  all Lake packages match their pinned revisions
+      toolchain: leanprover/lean4:v4.34.1
+
+--- gate G: log lines the write-up quotes are really in the archived logs
+    SKIP  no family README or no archived logs
+
+===> family 325-structural: ALL GATES PASSED
+     logs: /home/runner/work/oai-math-recheck/oai-math-recheck/.work/325-structural/proj/{build,axioms,verify}.log
