@@ -153,6 +153,24 @@ no `debug.skipKernelTC`, which would switch off kernel type-checking and which
 Mathlib and all eight transitive Lake packages match their pinned revisions
 with no local modifications.
 
+### G — the write-up quotes logs it actually has
+
+Every line this page shows inside a code fence that looks like Lean or Lake
+output is checked, verbatim, against the files under [`logs/`](logs):
+
+```
+    PASS  4/4 quoted lines verbatim in logs/
+```
+
+This gate exists because an earlier version of this page quoted two
+`#print axioms` lines off an archived log that was produced *before*
+`Scalar.lean` had any `#print axioms` in it. The quote was correct and the
+citation was impossible, and no amount of re-reading either file would have
+shown it.
+
+What it covers: quoted tool output. What it does **not** cover: prose, and in
+particular the timing tables — those are still only as good as the author.
+
 The two `sorry`s in `ComparatorChallenges/DirectCrouzeix.lean` are by design:
 the challenge file is the *statement*, and `comparator` pairs it with a
 solution that supplies the proof.

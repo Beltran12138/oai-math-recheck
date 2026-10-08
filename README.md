@@ -38,6 +38,7 @@ public.
 | D | the definitions we re-declared to make gate C possible are verbatim the challenge's | **5/5 identical** |
 | E | gate C is not vacuous — a wrong constant is rejected | **pass** (type mismatch at `c = 1`) |
 | F | nothing skips the kernel; dependencies are untouched | **pass** (0 `set_option`, 0 custom axioms, all packages clean) |
+| G | every log line the write-up quotes is really in the archived logs | **pass** (4/4 verbatim) |
 
 Plus one thing beyond reproducing their build. Their theorem is stated for
 *matrix*-coefficient polynomials, which is not a statement you can check by
@@ -87,6 +88,29 @@ falls out of their machinery, which is good evidence that `UniversalBound` is
 not a mis-formalisation stating something vacuous. It is **not** evidence about
 the novel part — uniformity in `m` — and nothing here is. For that you have to
 read `UniversalBound` and decide for yourself.
+
+## What five runs of this cost us, and why it is the point
+
+The gates above are green. Getting them there took five runs, and four of the
+five problems were in *this* harness rather than in OpenAI's proof:
+
+| found in | what it was | kind |
+|---|---|---|
+| run 1 | `audit.sh` took its repo root from `$PWD`, which `recheck.sh` had already changed, so it exited 64 before running a single gate | ordinary bug |
+| run 1 | gate A passed on `exit 0` and then printed `N/N` with `N` counted from the **source** files — it would have reported "42/42" for a build that compiled nothing | **a gate that could not fail** |
+| run 1 | `upload-artifact` skips dot-directories, so every log under `.work/` was dropped in silence | evidence lost |
+| run 3 | this write-up quoted the output of a `#print axioms` that was not in any file | **output nobody obtained** |
+| run 4 | the archived logs predated the line the write-up quoted off them, so the citation was impossible | **citation drift** |
+
+Gate A's check and gate G both exist because of that list, and the negative
+controls exist because a gate that cannot fail is worse than no gate: it
+converts "we did not look" into "we looked and it was fine". OpenAI's 42 files
+compiled on the first try on both machines. Our checker needed four corrections
+before it was entitled to say so.
+
+That is the argument for this repository, and it is not that formalisations
+fail to compile. It is that a formalisation with no CI leaves nothing to tell
+you when your *checker* is lying — and a checker will.
 
 ## What these gates do and do not show
 
@@ -161,8 +185,9 @@ what. That is a result, not an obstacle: it means that family cannot be checked
 without the upstream dependency tangle, and it is worth reporting.
 
 Gates D and E only apply to families where someone has hand-written a
-`Verify.lean`. Without one you get gates A, B and F, which is already more than
-the repository currently demonstrates about itself.
+`Verify.lean`, and gate G to families with a `README.md` and archived `logs/`.
+Without any of those you get gates A, B and F, which is already more than the
+repository currently demonstrates about itself.
 
 ## Licence
 

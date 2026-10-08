@@ -7,7 +7,8 @@
 # non-zero if any gate fails.  The gates are deliberately independent: gate B
 # does not go through any file we wrote, so a bug in our own audit code cannot
 # masquerade as a problem in OpenAI's proof.  Gates D and E exist because
-# gate C can pass vacuously.
+# gate C can pass vacuously, and gate G because the write-up can cite a log
+# that cannot contain what it quotes.
 
 set -uo pipefail
 
@@ -158,6 +159,56 @@ done
 [ "$DIRTY" = "0" ] && ok "all Lake packages match their pinned revisions" \
                    || no "a dependency has local modifications"
 printf '      toolchain: %s\n' "$(cat lean-toolchain)"
+
+# ============================ G. does the write-up quote the logs it has?
+# Found the hard way: the archived logs were once from a run older than the
+# line the README quoted off them, so the quote could not have come from the
+# file it cited.  Nothing catches that by reading.  This only covers lines
+# that look like Lean or Lake output -- prose, and the timing tables in
+# particular, are still on the author.
+gate G "log lines the write-up quotes are really in the archived logs"
+FAM_README="$REPO_ROOT/families/$FAMILY_NUMBER/README.md"
+FAM_LOGS="$REPO_ROOT/families/$FAMILY_NUMBER/logs"
+if [ -f "$FAM_README" ] && [ -d "$FAM_LOGS" ]; then
+  python3 - "$FAM_README" "$FAM_LOGS" <<'PY'
+import os, re, sys
+readme, logdir = sys.argv[1], sys.argv[2]
+blob = []
+for root, _, files in os.walk(logdir):
+    for f in files:
+        try:
+            blob.append(open(os.path.join(root, f), encoding='utf-8').read())
+        except (OSError, UnicodeDecodeError):
+            pass
+blob = '\n'.join(blob)
+
+# Only lines that are recognisably tool output, inside a fenced block.
+LOOKS_LIKE_OUTPUT = re.compile(
+    r'depends on axioms|^\s*(info|warning|error):|^\s*[✔✖ℹ⚠]\s*\[|^\s*Build completed')
+quoted, fenced = [], False
+for line in open(readme, encoding='utf-8').read().splitlines():
+    if line.lstrip().startswith('```'):
+        fenced = not fenced
+        continue
+    if fenced and LOOKS_LIKE_OUTPUT.search(line) and line.strip():
+        quoted.append(line.strip())
+
+missing = [q for q in quoted if q not in blob]
+for q in quoted:
+    print(f"      {'found  ' if q not in missing else 'MISSING'}  {q[:78]}")
+if not quoted:
+    print("    SKIP  the write-up quotes no tool output")
+elif missing:
+    print("    FAIL  %d of %d quoted lines are in no archived log" % (len(missing), len(quoted)))
+else:
+    print("    PASS  %d/%d quoted lines verbatim in %s/" % (
+        len(quoted), len(quoted), os.path.basename(logdir)))
+sys.exit(1 if missing else 0)
+PY
+  [ $? -eq 0 ] || FAILED=1
+else
+  skip "no family README or no archived logs"
+fi
 
 # ================================================================== verdict
 printf '\n'
