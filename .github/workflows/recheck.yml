@@ -30,7 +30,7 @@ jobs:
       matrix:
         # A manual run checks the one config it was given; anything else
         # checks every config in families/.
-        family: ${{ github.event.inputs.family && fromJSON(format('["{0}"]', github.event.inputs.family)) || fromJSON('["325", "325-hilbert", "325-complete", "325-structural"]') }}
+        family: ${{ github.event.inputs.family && fromJSON(format('["{0}"]', github.event.inputs.family)) || fromJSON('["325", "325-hilbert", "325-complete", "325-structural", "325-support"]') }}
     steps:
       - uses: actions/checkout@v7
 
