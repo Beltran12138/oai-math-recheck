@@ -1,0 +1,11 @@
+# The shell scripts here are run on Linux CI runners and on macOS. A CRLF
+# checkout turns `#!/usr/bin/env bash` into `bash\r` and the script dies with
+# "bad interpreter", so line endings are pinned rather than left to the
+# checkout platform's core.autocrlf.
+* text=auto eol=lf
+*.sh text eol=lf
+*.lean text eol=lf
+*.log text eol=lf
+*.yml text eol=lf
+LICENSE text eol=lf
+NOTICE text eol=lf
