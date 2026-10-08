@@ -32,7 +32,7 @@ public.
 
 | gate | what it establishes | result |
 |---|---|---|
-| A | OpenAI's 42 files compile against the Mathlib they pin | **42/42 `.olean` on disk, exit 0**, 36m48s / 5m19s wall |
+| A | OpenAI's 42 files compile against the Mathlib they pin | **42/42 `.olean` on disk, exit 0**, 36m48s / 5m29s wall |
 | B | the two headline theorems use no axiom beyond the standard three | **`[propext, Classical.choice, Quot.sound]`**, no `sorryAx` |
 | C | what is proved is the statement in the comparator challenge file | **pass** (definitional equality) |
 | D | the definitions we re-declared to make gate C possible are verbatim the challenge's | **5/5 identical** |
@@ -139,9 +139,9 @@ almost entirely paging, not proof-checking:
 
 | | Apple M4, 16 GB, macOS 26.5.2 | `ubuntu-24.04` runner, 7 GB, x86_64 |
 |---|---|---|
-| `lake exe cache get` | — | 2m53s |
-| `lake build` | **36m48s** (`user` 2m11s, `sys` 3m48s) | **5m19s** |
-| first file (`Model`) | 67 s | 45 s |
+| `lake exe cache get` | — | 2m59s |
+| `lake build` | **36m48s** (`user` 2m11s, `sys` 3m48s) | **5m29s** |
+| first file (`Model`) | 67 s | 43 s |
 | every later file | 47–67 s, flat | **3.7–11 s** |
 
 Six minutes of CPU inside thirty-seven of wall clock, and a per-file cost that

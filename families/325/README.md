@@ -68,8 +68,8 @@ revision upstream's own `lake-manifest.json` pins, read out of that file by
 
 | | Apple M4, 10 cores, 16 GB, macOS 26.5.2 | `ubuntu-24.04`, x86_64, 7 GB |
 |---|---|---|
-| run | local, 2026-10-07 | [Actions run 37721195947](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37721195947) |
-| `lake build` | 36m48s | 5m19s |
+| run | local, 2026-10-07 | [Actions run 37723287735](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37723287735) |
+| `lake build` | 36m48s | 5m29s |
 | gates A–F | all pass | all pass |
 | raw output | [`logs/`](logs) | [`logs/ci-ubuntu-x86_64/`](logs/ci-ubuntu-x86_64) |
 
@@ -170,8 +170,13 @@ theorem scalar_crouzeix {n : ℕ} (hn : 0 < n) (A : Matrix (Fin n) (Fin n) ℂ)
 ```
 
 `Scalar.lean` ends with `#print axioms` on both of its own results, so the
-derivation cannot smuggle in anything the gates do not see; the answer is in
-[`logs/ci-ubuntu-x86_64/verify.log`](logs/ci-ubuntu-x86_64/verify.log).
+derivation cannot smuggle in anything the gates do not see. Verbatim from
+[`logs/ci-ubuntu-x86_64/verify.log`](logs/ci-ubuntu-x86_64/verify.log):
+
+```
+info: Scalar.lean:156:0: 'Recheck.scalar_crouzeix' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: Scalar.lean:157:0: 'Recheck.numericalRange_fin_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+```
 
 **What this is worth, precisely.** As of August 2026 this statement is a
 theorem independently proved by humans, so deriving it is a *consistency

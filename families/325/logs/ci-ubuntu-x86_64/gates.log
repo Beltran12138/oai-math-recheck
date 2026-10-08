@@ -21,12 +21,12 @@ env:
 ==> lake exe cache get
 
 ==> lake build OAI   (this is OpenAI's proof; none of our code is in it)
-    exit=0  wall=5m19s
+    exit=0  wall=5m29s
 
 ==> handing off to audit.sh
 
 --- gate A: OpenAI's proof compiles
-    PASS  42/42 modules compiled (42 built this run), exit 0, wall 5m19s
+    PASS  42/42 modules compiled (42 built this run), exit 0, wall 5m29s
 
 --- gate B: the headline theorems rest on no axiom beyond the standard three
       'OAI.DirectCrouzeix.complete_crouzeix' depends on axioms: [propext, Classical.choice, Quot.sound]
