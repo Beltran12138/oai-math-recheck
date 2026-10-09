@@ -1,0 +1,65 @@
+
+==> fetching OAI/Analysis/DirectCrouzeix from openai/math @ adc7f1241b42
+    42 files, 7389 lines
+
+==> checking the family imports nothing beyond Mathlib
+    ok: Mathlib only
+
+==> assembling a minimal Lake project
+    mathlib -> d13f23b723b8  (read from upstream manifest)
+    copied 2 audit file(s)
+
+==> lake exe cache get
+
+==> lake build OAI   (this is OpenAI's proof; none of our code is in it)
+    exit=0  wall=3m03s
+
+==> handing off to audit.sh
+
+--- gate A: OpenAI's proof compiles
+    PASS  42/42 modules compiled (42 built this run), exit 0, wall 3m3s
+
+--- gate B: the headline theorems rest on no axiom beyond the standard three
+      'OAI.DirectCrouzeix.complete_crouzeix' depends on axioms: [propext, Classical.choice, Quot.sound]
+      'OAI.DirectCrouzeix.uniform_sharpness' depends on axioms: [propext, Classical.choice, Quot.sound]
+    PASS  2/2 theorems: [propext, Classical.choice, Quot.sound], no sorry
+
+--- gate C: what is proved is the statement in the comparator challenge
+    PASS  11 constants identical after elaboration (types, universe params, definition bodies)
+    PASS  Verify Scalar built; the defeq checks inside them went through
+
+--- gate D: definitions compared against the challenge are verbatim the challenge's
+      against ComparatorChallenges/DirectCrouzeix.lean
+      same  numericalRange
+      same  polynomialValue
+      same  tensorEvaluation
+      same  rangeMaximum
+      same  UniversalBound
+    PASS  5/5 verbatim identical
+
+--- gate E: negative control: a wrong constant must be rejected
+    PASS  rejected: .NegControl.lean:118:48: error: Application type mismatch: The argumen
+
+--- gate F: no kernel bypass, no custom axioms, dependencies untouched
+      set_option             0
+      ^axiom                 0
+      native_decide          0
+      \bunsafe\b             0
+      implemented_by         0
+      @\[extern              0
+      Lean\.ofReduceBool     0
+      #exit                  0
+      ^(macro|elab|syntax)   0
+    PASS  none of the above appear in OAI/Analysis/DirectCrouzeix 
+    PASS  all Lake packages match their pinned revisions
+      toolchain: leanprover/lean4:v4.34.1
+
+--- gate G: log lines the write-up quotes are really in the archived logs
+      found    'OAI.DirectCrouzeix.complete_crouzeix' depends on axioms: [propext, Classical.
+      found    'OAI.DirectCrouzeix.uniform_sharpness' depends on axioms: [propext, Classical.
+      found    info: Scalar.lean:156:0: 'Recheck.scalar_crouzeix' depends on axioms: [propext
+      found    info: Scalar.lean:157:0: 'Recheck.numericalRange_fin_one' depends on axioms: [
+    PASS  4/4 quoted lines verbatim in logs/
+
+===> family 325: ALL GATES PASSED
+     logs: /Users/bernard/dev/oai-math-recheck-gh/.work/325/proj/{build,axioms,verify}.log

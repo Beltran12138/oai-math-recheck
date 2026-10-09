@@ -51,6 +51,15 @@ Gate E weakens "the spectrum lies in the closure of the numerical range" to
 "lies in the numerical range" in the first theorem. Its verdict names
 `numericalClosure_geometry` as the only constant that differs.
 
+### Second architecture
+
+The same configuration also passes every gate on an Apple M4 (arm64,
+macOS 26.5.2), from a fresh clone at `d9e35dc`. Logs are in
+[`logs/apple-m4-arm64/`](logs/apple-m4-arm64). The statement dump there is
+byte-identical to the x86_64 one, with the same sha256 in both `PROVENANCE`
+files: two machines of different architectures elaborate the challenge to
+exactly the same terms.
+
 ## Files
 
 | file | what it is |

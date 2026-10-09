@@ -66,6 +66,15 @@ directory is fetched, copied, added to the Lake globs, held to the same import
 rule, and scanned by gate F. Without the declaration the family is still
 refused; we checked that offline (seven imports reported).
 
+### Second architecture
+
+The same configuration also passes every gate on an Apple M4 (arm64,
+macOS 26.5.2), from a fresh clone at `d9e35dc`. Logs are in
+[`logs/apple-m4-arm64/`](logs/apple-m4-arm64). The statement dump there is
+byte-identical to the x86_64 one, with the same sha256 in both `PROVENANCE`
+files: two machines of different architectures elaborate the challenge to
+exactly the same terms.
+
 ## Reading the statement
 
 What we read, and what we found:

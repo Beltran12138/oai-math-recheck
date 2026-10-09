@@ -96,6 +96,15 @@ first run.
 | gate D, before the first CI run | A declaration was taken to end at the next blank line. The challenge writes `abbrev Operator` and `abbrev Coeff` on adjacent lines, so the two were captured as one and reported as a false DIFFERS. A declaration now ends at a blank line or at the next line starting in column 0. |
 | the first CI run (37749936010) | Gate C reported 26 constants as different, among them the one-line `abbrev Operator`. An anonymous instance binder gets a generated name that embeds the module it was elaborated in (`inst._@.ComparatorChallenges.CrouzeixHilbert.…` against `inst._@.OAI.Analysis.Crouzeix.Definitions.…`), and the dump wrote binder names out. Lean's own `Expr` equality ignores binder names, and the dump now erases them. Gate E passed on that same run, but only because of the same noise, so that pass counts for nothing. |
 
+### Second architecture
+
+The same configuration also passes every gate on an Apple M4 (arm64,
+macOS 26.5.2), from a fresh clone at `d9e35dc`. Logs are in
+[`logs/apple-m4-arm64/`](logs/apple-m4-arm64). The statement dump there is
+byte-identical to the x86_64 one, with the same sha256 in both `PROVENANCE`
+files: two machines of different architectures elaborate the challenge to
+exactly the same terms.
+
 ## What is still open
 
 1. **Faithfulness is still a human judgement**, although this statement leaves

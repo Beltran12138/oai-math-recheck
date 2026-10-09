@@ -184,6 +184,13 @@ The two `sorry`s in `ComparatorChallenges/DirectCrouzeix.lean` are by design:
 the challenge file is the *statement*, and `comparator` pairs it with a
 solution that supplies the proof.
 
+### Second architecture, current harness
+
+The current harness, including the comparator-style dump in gate C, also
+passes every gate on an Apple M4 (arm64, macOS 26.5.2) from a fresh clone at
+`d9e35dc`. Logs are in [`logs/apple-m4-arm64/`](logs/apple-m4-arm64). The
+other logs on this page come from earlier versions of the harness.
+
 ## `Scalar.lean` — specialising to scalar coefficients
 
 `UniversalBound` is five nested definitions deep, which is more than a reader

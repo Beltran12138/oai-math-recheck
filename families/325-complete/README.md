@@ -57,6 +57,15 @@ Gate C runs two checks here. The dump compares this challenge with this
 solution, the way [`../325-hilbert`](../325-hilbert) does. `Verify.lean` is the
 cross-check against DirectCrouzeix.
 
+### Second architecture
+
+The same configuration also passes every gate on an Apple M4 (arm64,
+macOS 26.5.2), from a fresh clone at `d9e35dc`. Logs are in
+[`logs/apple-m4-arm64/`](logs/apple-m4-arm64). The statement dump there is
+byte-identical to the x86_64 one, with the same sha256 in both `PROVENANCE`
+files: two machines of different architectures elaborate the challenge to
+exactly the same terms.
+
 ## Limits
 
 1. **Gate E covers only the dump.** It weakens this challenge's bound and

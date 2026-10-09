@@ -1,0 +1,7 @@
+Apple M4 (arm64), macOS 26.5.2, 16 GB, Lean v4.34.1, mathlib d13f23b723b8
+repo at commit d9e35dc (fresh clone), openai/math at adc7f1241b42
+run 2026-10-08; upstream fetched through a local HTTP proxy
+
+Statement dumps:
+  sha256 31983e0b4bcf624862583256d3a60b45ea44fcd35cdfc2d3833a1a778d968ff9  dump-challenge.txt
+  sha256 31983e0b4bcf624862583256d3a60b45ea44fcd35cdfc2d3833a1a778d968ff9  dump-solution.txt
