@@ -1,0 +1,11 @@
+GitHub Actions run 38147059929, job 114492530514
+https://github.com/Beltran12138/oai-math-recheck/actions/runs/38147059929
+ubuntu-24.04 x86_64 (image 20261002.596), 15 GB RAM, Lean v4.34.1, mathlib d13f23b723b8
+repo at commit c5a115b, openai/math at fd4aeeb2ee4f
+
+dump-solution.txt is byte-identical to dump-challenge.txt, so only the
+challenge dump is kept (gzipped), with the negative control's. Both are also
+byte-identical to the Apple M4 run's (../apple-m4-arm64/PROVENANCE):
+  sha256 320bf2e914128f59705610e6bb60d10837f3ff924aa600a47684a44c60953c24  dump-challenge.txt
+  sha256 320bf2e914128f59705610e6bb60d10837f3ff924aa600a47684a44c60953c24  dump-solution.txt
+  sha256 7bf331842cf3dd47e918289b0a42f472ce77ec0fedb36d81a6b5e7e925da0590  dump-negcontrol.txt

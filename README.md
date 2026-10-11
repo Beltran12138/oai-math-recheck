@@ -122,8 +122,8 @@ what a pass does not show.
   not a soundness one: the patched library is kernel-checked like the rest.
 - [**103**](families/103/README.md), `L = RL = BPL`: 39 files, checked at
   upstream `fd4aeeb` because the formalization arrived in the 2026-10-07
-  update. Passes every gate that applies on an Apple M4; no CI run yet when
-  written. Its 118 `set_option`s are all resource limits or `autoImplicit`,
+  update. Passes every gate that applies on x86_64 (CI) and Apple M4, with
+  byte-identical statement dumps on both. Its 118 `set_option`s are all resource limits or `autoImplicit`,
   which is why gate F now separates those from options that could matter.
 
 ## What family 325 actually claims — read this before quoting any of it

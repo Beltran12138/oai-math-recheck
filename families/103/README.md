@@ -47,8 +47,19 @@ instance, are allowed, which is known not to change `L`.
 
 ## Gate results
 
-Apple M4 Mac mini (arm64, macOS 26.5.2). Logs in
-[`logs/apple-m4-arm64/`](logs/apple-m4-arm64). No CI run yet.
+Two architectures, same verdicts.
+
+GitHub Actions, `ubuntu-24.04` x86_64, run
+[38147059929](https://github.com/Beltran12138/oai-math-recheck/actions/runs/38147059929)
+at `c5a115b`. Logs in [`logs/ci-ubuntu-x86_64/`](logs/ci-ubuntu-x86_64).
+
+```
+    PASS  39/39 modules compiled (39 built this run), exit 0, wall 7m46s
+```
+
+Apple M4 Mac mini (arm64, macOS 26.5.2), the run made before the commit, with
+the same `recheck.sh` / `audit.sh` (sha256-checked). Logs in
+[`logs/apple-m4-arm64/`](logs/apple-m4-arm64).
 
 ```
     PASS  39/39 modules compiled (39 built this run), exit 0, wall 4m56s
@@ -58,6 +69,11 @@ Apple M4 Mac mini (arm64, macOS 26.5.2). Logs in
     PASS  none of the above appear in OAI/Computability/Logspace 
     PASS  all Lake packages match their pinned revisions
 ```
+
+The other gates read identically on both machines, and the challenge,
+solution and negative-control dumps have the same sha256 on both (see the two
+`PROVENANCE` files): x86_64 and arm64 elaborate the statement to exactly the
+same terms.
 
 Gate E relaxes `BPL`'s error on no-instances from 1/3 to 1/2 in a copy of the
 challenge. Gate D is skipped: the statement is checked by elaboration (gate C).
