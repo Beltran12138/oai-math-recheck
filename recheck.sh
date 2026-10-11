@@ -164,12 +164,14 @@ for d in ${EXTRA_DIRS:-}; do GLOBS="$GLOBS, \"${d//\//.}.+\""; done
 
 cat > "$PROJ/lakefile.toml" <<EOF
 name = "recheck"
-
+$EXTRA_REQUIRE_TOML
+# Mathlib last: Lake lets the last require win shared transitive packages
+# (batteries, aesop, ...), and the Mathlib cache refuses any revs but its own.
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "$MATHLIB_REV"
-$EXTRA_REQUIRE_TOML
+
 [leanOptions]
 autoImplicit = false
 
