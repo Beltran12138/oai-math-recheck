@@ -24,13 +24,15 @@ on:
 jobs:
   recheck:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    # 102 (Unique Games) is 478 files / 187k lines, 25x family 325; GitHub's
+    # hosted-runner ceiling is 360.
+    timeout-minutes: 350
     strategy:
       fail-fast: false
       matrix:
         # A manual run checks the one config it was given; anything else
         # checks every config in families/.
-        family: ${{ github.event.inputs.family && fromJSON(format('["{0}"]', github.event.inputs.family)) || fromJSON('["325", "325-hilbert", "325-complete", "325-structural", "325-support"]') }}
+        family: ${{ github.event.inputs.family && fromJSON(format('["{0}"]', github.event.inputs.family)) || fromJSON('["325", "325-hilbert", "325-complete", "325-structural", "325-support", "102", "107"]') }}
     steps:
       - uses: actions/checkout@v7
 

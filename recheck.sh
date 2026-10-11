@@ -79,6 +79,12 @@ say "checking the family imports nothing beyond Mathlib"
 # are held to the same rule.  Declaring one is a visible statement that this
 # family's proof is built partly from another family's development.
 SELF_PREFIXES="${FAMILY_DIR//\//.}"
+# EXTRA_REQUIRES: "<upstream manifest package>:<import root>" pairs for a
+# non-Mathlib library the proof imports.  Each is pinned to the rev upstream's
+# own manifest pins (step 3) and its import root is admitted here.  Gate B
+# still follows every axiom through it, so the kernel remains the only judge;
+# what a declaration changes is that the dependency is named, not hidden.
+for r in ${EXTRA_REQUIRES:-}; do SELF_PREFIXES="$SELF_PREFIXES ${r#*:}"; done
 DIRS="$SRC/$FAMILY_DIR"
 for d in ${EXTRA_DIRS:-}; do
   [ -d "$SRC/$d" ] || { echo "no such extra dir: $d" >&2; exit 1; }
@@ -87,7 +93,7 @@ for d in ${EXTRA_DIRS:-}; do
 done
 BAD=$(find $DIRS -name '*.lean' -exec grep -h '^import ' {} + \
       | awk '{print $2}' | sort -u \
-      | grep -vE '^(Mathlib|Batteries|Aesop|Qq|Plausible|ImportGraph|LeanSearchClient|ProofWidgets)(\.|$)' \
+      | grep -vE '^(Init|Lean|Std|Mathlib|Batteries|Aesop|Qq|Plausible|ImportGraph|LeanSearchClient|ProofWidgets)(\.|$)' \
       | awk -v P="$SELF_PREFIXES" 'BEGIN { n = split(P, p, " ") }
              { for (i = 1; i <= n; i++) if ($0 == p[i] || index($0, p[i] ".") == 1) next; print }' \
       || true)
@@ -97,7 +103,11 @@ if [ -n "$BAD" ]; then
   echo "    That is itself a finding -- report it, do not work around it." >&2
   exit 2
 fi
-echo "    ok: Mathlib only"
+if [ -n "${EXTRA_REQUIRES:-}" ]; then
+  echo "    ok: Mathlib, plus declared: $EXTRA_REQUIRES"
+else
+  echo "    ok: Mathlib only"
+fi
 
 # ------------------------------------------------------- 3. project layout
 say "assembling a minimal Lake project"
@@ -130,6 +140,25 @@ for p in json.load(open('$SRC/lake-manifest.json'))['packages']:
 else: sys.exit('mathlib missing from upstream lake-manifest.json')")
 echo "    mathlib -> ${MATHLIB_REV:0:12}  (read from upstream manifest)"
 
+# Declared extra libraries, same rule: url and rev come from upstream's manifest.
+EXTRA_REQUIRE_TOML=""
+for r in ${EXTRA_REQUIRES:-}; do
+  PKG="${r%%:*}"
+  LINE=$(python3 -c "
+import json,sys
+for p in json.load(open('$SRC/lake-manifest.json'))['packages']:
+    if p.get('name','').strip('«»')=='$PKG':
+        print(p['url'], p['rev']); break
+else: sys.exit('$PKG missing from upstream lake-manifest.json')")
+  echo "    $PKG -> ${LINE#* }  ${LINE% *}  (read from upstream manifest)"
+  EXTRA_REQUIRE_TOML="$EXTRA_REQUIRE_TOML
+[[require]]
+name = \"$PKG\"
+git = \"${LINE% *}\"
+rev = \"${LINE#* }\"
+"
+done
+
 GLOBS="\"${FAMILY_DIR//\//.}.+\""
 for d in ${EXTRA_DIRS:-}; do GLOBS="$GLOBS, \"${d//\//.}.+\""; done
 
@@ -140,7 +169,7 @@ name = "recheck"
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
 rev = "$MATHLIB_REV"
-
+$EXTRA_REQUIRE_TOML
 [leanOptions]
 autoImplicit = false
 
