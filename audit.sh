@@ -227,8 +227,22 @@ else
 fi
 DIRTY=0
 for d in .lake/packages/*/; do
+  name=$(basename "$d")
   c=$(git -C "$d" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
-  [ "$c" != "0" ] && { printf '      dirty: %s (%s files)\n' "$(basename "$d")" "$c"; DIRTY=1; }
+  [ "$c" = "0" ] && continue
+  # A package recheck.sh patched with upstream's own patch is allowed to differ
+  # by exactly that patch: undo it on a scratch copy and require a clean tree.
+  if [ -f "patches/$name.patch" ]; then
+    T=$(mktemp -d)
+    cp -R "$d/." "$T/"
+    if git -C "$T" apply --reverse "$PWD/patches/$name.patch" 2>/dev/null \
+       && [ -z "$(git -C "$T" status --porcelain)" ]; then
+      printf '      patched: %s, exactly upstream'"'"'s patch and nothing else\n' "$name"
+      rm -rf "$T"; continue
+    fi
+    rm -rf "$T"
+  fi
+  printf '      dirty: %s (%s files)\n' "$name" "$c"; DIRTY=1
 done
 [ "$DIRTY" = "0" ] && ok "all Lake packages match their pinned revisions" \
                    || no "a dependency has local modifications"

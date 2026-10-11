@@ -60,6 +60,7 @@ $(for d in ${EXTRA_DIRS:-}; do echo "/lean/$d/"; done)
 /lean/lean-toolchain
 /lean/lake-manifest.json
 /lean/docs/
+/lean/patches/
 EOF
 
 git -C "$UP" fetch -q --filter=blob:none --no-tags origin "$UPSTREAM_SHA"
@@ -200,6 +201,23 @@ fi
 cd "$PROJ"
 say "lake exe cache get"
 lake exe cache get > cache.log 2>&1 || { tail -20 cache.log; exit 1; }
+
+# Upstream does not build its third-party libraries as their authors left them:
+# its lakefile applies lean/patches/<package>-lean4341.patch to each one.  Do
+# the same, from the same pinned commit, and say so.  This changes provenance,
+# not soundness -- the patched library is still kernel-checked and gate B still
+# follows its axioms -- and gate F verifies the patch is the only change.
+for r in ${EXTRA_REQUIRES:-}; do
+  PKG="${r%%:*}"
+  PATCH="$SRC/patches/$PKG-lean4341.patch"
+  [ -f "$PATCH" ] || continue
+  mkdir -p patches
+  cp "$PATCH" "patches/$PKG.patch"
+  git -C ".lake/packages/$PKG" apply "$PROJ/patches/$PKG.patch" \
+    || { echo "    $PKG: upstream's patch does not apply" >&2; exit 1; }
+  echo "    $PKG: applied upstream's lean/patches/$PKG-lean4341.patch" \
+       "($(git -C ".lake/packages/$PKG" diff --shortstat | sed 's/^ //'))"
+done
 
 say "lake build $TOP   (this is OpenAI's proof; none of our code is in it)"
 START=$(date +%s)
