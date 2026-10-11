@@ -226,6 +226,7 @@ else
   no "present, needs a human look: ${HITS[*]}"
 fi
 DIRTY=0
+PATCHED=""
 for d in .lake/packages/*/; do
   name=$(basename "$d")
   c=$(git -C "$d" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
@@ -238,14 +239,20 @@ for d in .lake/packages/*/; do
     if git -C "$T" apply --reverse "$PWD/patches/$name.patch" 2>/dev/null \
        && [ -z "$(git -C "$T" status --porcelain)" ]; then
       printf '      patched: %s, exactly upstream'"'"'s patch and nothing else\n' "$name"
+      PATCHED="$PATCHED $name"
       rm -rf "$T"; continue
     fi
     rm -rf "$T"
   fi
   printf '      dirty: %s (%s files)\n' "$name" "$c"; DIRTY=1
 done
-[ "$DIRTY" = "0" ] && ok "all Lake packages match their pinned revisions" \
-                   || no "a dependency has local modifications"
+if [ "$DIRTY" != "0" ]; then
+  no "a dependency has local modifications"
+elif [ -n "$PATCHED" ]; then
+  ok "Lake packages match their pinned revisions, except upstream's own patch to:$PATCHED"
+else
+  ok "all Lake packages match their pinned revisions"
+fi
 printf '      toolchain: %s\n' "$(cat lean-toolchain)"
 
 # ============================ G. does the write-up quote the logs it has?

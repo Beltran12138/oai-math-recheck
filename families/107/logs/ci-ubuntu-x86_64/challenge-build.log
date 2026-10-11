@@ -1,0 +1,6 @@
+warning: fixed-point-theorems: repository '/home/runner/work/oai-math-recheck/oai-math-recheck/.work/107/proj/.lake/packages/fixed-point-theorems' has local changes
+⚠ [8924/8924] Built ComparatorChallenges.MatrixMultiplication (3.1s)
+warning: ComparatorChallenges/MatrixMultiplication.lean:118:8: declaration uses `sorry`
+warning: ComparatorChallenges/MatrixMultiplication.lean:122:8: declaration uses `sorry`
+warning: ComparatorChallenges/MatrixMultiplication.lean:126:8: declaration uses `sorry`
+Build completed successfully (8924 jobs).

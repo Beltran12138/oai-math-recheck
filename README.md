@@ -3,10 +3,11 @@
 [![recheck](https://github.com/Beltran12138/oai-math-recheck/actions/workflows/recheck.yml/badge.svg)](https://github.com/Beltran12138/oai-math-recheck/actions/workflows/recheck.yml)
 
 Re-check individual result families from [openai/math](https://github.com/openai/math)
-yourself, without building the other 721 manuscripts.
+yourself, without building every other manuscript.
 
 On 2026-10-06 OpenAI published 722 mathematical manuscripts, many with Lean
-formalisations. The repository ships **no CI** — its only GitHub workflow is
+formalisations (719 after three withdrawals on 2026-10-07; see upstream
+`history.md`). The repository ships **no CI** — its only GitHub workflow is
 dependabot — and its own `formalization.yaml` records `review: unchecked`.
 The formalisations are there; nothing in the repository demonstrates that any
 of them compiles, let alone that it proves the stated theorem.
@@ -100,6 +101,26 @@ support: four lemmas, one of them the zero-space case. It is rebuilt too, in
 [37774827283](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37774827283)),
 so every comparator file of family 325 now has a passing re-check.
 
+## Two more families: Unique Games (102) and ω ≤ 9/4 (107)
+
+Both pass every gate that applies, in run
+[38141681690](https://github.com/Beltran12138/oai-math-recheck/actions/runs/38141681690).
+Each write-up says what the statement is, where it could have gone wrong, and
+what a pass does not show.
+
+- [**102**](families/102/README.md), the headline Unique Games statement:
+  478 files, 187k lines. NP-hardness is only meaningful if the reduction is
+  restricted, so gate C additionally asserts that it is Mathlib's
+  `TM2ComputableInPolyTime`, plus a finite-alphabet condition Mathlib's
+  `FinTM2` leaves out and the statement adds itself.
+- [**107**](families/107/README.md), `ω(ℂ) ≤ 9/4` and two rectangular bounds:
+  509 files. The first family here that is not Mathlib-only, and the
+  dependency is not as its author published it. The 9/4 path uses Brouwer's
+  theorem from harfe/fixed-point-theorems-lean4, which upstream builds only
+  after applying its own compatibility patch. `recheck.sh` applies the same
+  patch and gate F checks it is the only change. That is a provenance point,
+  not a soundness one: the patched library is kernel-checked like the rest.
+
 ## What family 325 actually claims — read this before quoting any of it
 
 The headline going around is that OpenAI resolved Crouzeix's conjecture. That
@@ -169,6 +190,13 @@ binder names carrying the module they were elaborated in. They are listed in
 [`families/325-hilbert/README.md`](families/325-hilbert/README.md). Teaching
 gate G to check `audit.sh`'s own verdict lines then turned up one more in the
 write-up: 325's page quoted gate G's verdict, which no archived log contained.
+
+Families 102 and 107 added two more, both ours: `recheck.sh` wrote
+`require mathlib` first, so a third-party library's own pins won and the
+Mathlib cache refused to load; and it built that library unpatched, which
+upstream never does. OpenAI's 509 files compiled on the first run that built
+them as upstream does
+([107's write-up](families/107/README.md#two-runs-that-failed-first-both-on-our-side)).
 
 Which is the argument for this repository, and it is not that formalisations
 fail to compile. It is that a formalisation with no CI leaves nothing to tell
@@ -267,9 +295,13 @@ either.
 Create `families/<n>/family.conf` (copy
 [325's](families/325/family.conf), it is commented) and run `./recheck.sh <n>`.
 
-If the family imports anything outside Mathlib, `recheck.sh` stops and says
-what. That is a result, not an obstacle: it means that family cannot be checked
-without the upstream dependency tangle, and it is worth reporting.
+If the family imports anything outside Mathlib (and `Init`/`Lean`/`Std`,
+which ship with the toolchain), `recheck.sh` stops and says what. That is a
+result, not an obstacle, and worth reporting. To go further, declare the
+library in `EXTRA_REQUIRES` as `<manifest package>:<import root>`, as
+[107](families/107/family.conf) does: its rev is read from upstream's
+manifest, upstream's `lean/patches/<package>-lean4341.patch` is applied if
+there is one, and gate F checks that patch is the only change.
 
 Gates C to E need either a hand-written `Verify.lean` (as in 325) or
 `CHALLENGE_MODULE` and `NEG_KIND=dump` in `family.conf` (as in 325-hilbert,

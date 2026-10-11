@@ -1,0 +1,10 @@
+GitHub Actions run 38141681690, job 114476651231
+https://github.com/Beltran12138/oai-math-recheck/actions/runs/38141681690
+ubuntu-24.04 x86_64 (image 20261002.596), 15 GB RAM, Lean v4.34.1, mathlib d13f23b723b8
+repo at commit c4ac1c9, openai/math at adc7f1241b42
+
+dump-solution.txt is byte-identical to dump-challenge.txt, so only the
+challenge dump is kept (gzipped), with the negative control's:
+  sha256 8624cf9d0a540e29f0991354febf22d9a12924eb67090283045a4587ed818063  dump-challenge.txt
+  sha256 8624cf9d0a540e29f0991354febf22d9a12924eb67090283045a4587ed818063  dump-solution.txt
+  sha256 e329fe16449c5919d3b053ad895db89ae26af9cc88d8cbe0170a66f875ba8785  dump-negcontrol.txt
