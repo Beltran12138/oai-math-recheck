@@ -16,7 +16,10 @@
 set -euo pipefail
 
 UPSTREAM_REPO="${UPSTREAM_REPO:-https://github.com/openai/math.git}"
-UPSTREAM_SHA="${UPSTREAM_SHA:-adc7f1241b42e322a6451854ab7e4b4c146bf78a}"
+# Precedence: UPSTREAM_SHA from the environment, else the family's own
+# FAMILY_UPSTREAM_SHA (for families that only exist in a later upstream
+# commit), else the commit every other family was checked at.
+ENV_UPSTREAM_SHA="${UPSTREAM_SHA:-}"
 
 REPO_ROOT="$PWD"
 FAMILY_NUMBER="${1:-}"
@@ -26,6 +29,7 @@ CONF="$REPO_ROOT/families/$FAMILY_NUMBER/family.conf"
 [ -f "$CONF" ] || { echo "no config: $CONF" >&2; exit 64; }
 # shellcheck source=/dev/null
 . "$CONF"
+UPSTREAM_SHA="${ENV_UPSTREAM_SHA:-${FAMILY_UPSTREAM_SHA:-adc7f1241b42e322a6451854ab7e4b4c146bf78a}}"
 : "${FAMILY_DIR:?family.conf must set FAMILY_DIR}"
 
 WORK="${WORK:-$REPO_ROOT/.work/$FAMILY_NUMBER}"

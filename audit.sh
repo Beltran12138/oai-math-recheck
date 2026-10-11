@@ -214,7 +214,16 @@ fi
 gate F "no kernel bypass, no custom axioms, dependencies untouched"
 SCOPE="$FAMILY_DIR ${EXTRA_DIRS:-}"   # everything this family's proof is built from
 declare -a HITS=()
-for pat in 'set_option' '^axiom ' 'native_decide' '\bunsafe\b' 'implemented_by' \
+# Resource limits and elaboration conveniences change what the elaborator is
+# willing to try, not what the kernel accepts, so they are counted, not failed.
+# Any other option (debug.skipKernelTC is the one that matters) still fails.
+BENIGN='set_option (maxHeartbeats|maxRecDepth|synthInstance\.[A-Za-z]+|autoImplicit|relaxedAutoImplicit|linter\.[A-Za-z.]+|pp\.[A-Za-z.]+|exponentiation\.threshold) '
+nb=$(grep -rnE "$BENIGN" $SCOPE 2>/dev/null | wc -l | tr -d ' ')
+printf '      %-22s %s  (resource limits / autoImplicit / linter; not failed)\n' "set_option, benign" "$nb"
+n=$(grep -rnE 'set_option' $SCOPE 2>/dev/null | grep -vE "$BENIGN" | wc -l | tr -d ' ')
+printf '      %-22s %s\n' "set_option, other" "$n"
+[ "$n" != "0" ] && HITS+=("set_option($n)")
+for pat in '^axiom ' 'native_decide' '\bunsafe\b' 'implemented_by' \
            '@\[extern' 'Lean\.ofReduceBool' '#exit' '^(macro|elab|syntax)'; do
   n=$(grep -rnE "$pat" $SCOPE 2>/dev/null | wc -l | tr -d ' ')
   printf '      %-22s %s\n' "$pat" "$n"

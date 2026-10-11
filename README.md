@@ -101,7 +101,7 @@ support: four lemmas, one of them the zero-space case. It is rebuilt too, in
 [37774827283](https://github.com/Beltran12138/oai-math-recheck/actions/runs/37774827283)),
 so every comparator file of family 325 now has a passing re-check.
 
-## Two more families: Unique Games (102) and ω ≤ 9/4 (107)
+## More families: Unique Games (102), ω ≤ 9/4 (107), L = BPL (103)
 
 Both pass every gate that applies, in run
 [38141681690](https://github.com/Beltran12138/oai-math-recheck/actions/runs/38141681690).
@@ -120,6 +120,11 @@ what a pass does not show.
   after applying its own compatibility patch. `recheck.sh` applies the same
   patch and gate F checks it is the only change. That is a provenance point,
   not a soundness one: the patched library is kernel-checked like the rest.
+- [**103**](families/103/README.md), `L = RL = BPL`: 39 files, checked at
+  upstream `fd4aeeb` because the formalization arrived in the 2026-10-07
+  update. Passes every gate that applies on an Apple M4; no CI run yet when
+  written. Its 118 `set_option`s are all resource limits or `autoImplicit`,
+  which is why gate F now separates those from options that could matter.
 
 ## What family 325 actually claims — read this before quoting any of it
 
@@ -301,7 +306,9 @@ result, not an obstacle, and worth reporting. To go further, declare the
 library in `EXTRA_REQUIRES` as `<manifest package>:<import root>`, as
 [107](families/107/family.conf) does: its rev is read from upstream's
 manifest, upstream's `lean/patches/<package>-lean4341.patch` is applied if
-there is one, and gate F checks that patch is the only change.
+there is one, and gate F checks that patch is the only change. A family whose
+formalization only exists in a later upstream commit sets
+`FAMILY_UPSTREAM_SHA` ([103](families/103/family.conf)).
 
 Gates C to E need either a hand-written `Verify.lean` (as in 325) or
 `CHALLENGE_MODULE` and `NEG_KIND=dump` in `family.conf` (as in 325-hilbert,

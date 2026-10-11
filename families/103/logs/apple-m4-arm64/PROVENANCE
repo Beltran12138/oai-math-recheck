@@ -1,0 +1,12 @@
+Apple M4 Mac mini (arm64), 16 GB RAM, macOS 26.5.2, Lean v4.34.1, mathlib d13f23b723b8
+harness: uncommitted working tree on top of d9100e3 (recheck.sh with
+FAMILY_UPSTREAM_SHA, audit.sh with the benign/other set_option split); the
+commit that adds this directory carries exactly those two files.
+openai/math at fd4aeeb2ee4f (FAMILY_UPSTREAM_SHA; family 103's formalization
+was added in upstream's 2026-10-07 update and is not in adc7f12)
+
+dump-solution.txt is byte-identical to dump-challenge.txt, so only the
+challenge dump is kept (gzipped), with the negative control's:
+  sha256 320bf2e914128f59705610e6bb60d10837f3ff924aa600a47684a44c60953c24  dump-challenge.txt
+  sha256 320bf2e914128f59705610e6bb60d10837f3ff924aa600a47684a44c60953c24  dump-solution.txt
+  sha256 7bf331842cf3dd47e918289b0a42f472ce77ec0fedb36d81a6b5e7e925da0590  dump-negcontrol.txt
