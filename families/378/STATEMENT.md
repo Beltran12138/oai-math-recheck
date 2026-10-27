@@ -69,6 +69,14 @@ Points both readings reached independently:
 - **A PASS here does not mean the theorem is true.** It means that if the proof checks against this
   statement, ETH is false.
 
+## Hash note (added after commit `22c1074`)
+
+`labelkey.json` and `referee/checklist.md` were written with CRLF line endings on Windows, and the
+hashes above (`f1af9269…` and, in `referee/inputs.sha256`, `fd5a792f…`) were taken over those bytes,
+which are the bytes the referee actually read. Git stores both files with LF, so a fresh checkout
+hashes to `81fe8897…` and `b9a11f50…`. To reproduce the recorded hashes, convert back with
+`unix2dos` first. Every other hash in this family was taken over LF files.
+
 ## Files
 
 | file | what it is |
