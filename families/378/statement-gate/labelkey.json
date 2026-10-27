@@ -1,0 +1,18 @@
+{
+ "A": {
+  "version": "M1_quantifier_swap",
+  "sha256": "62f0e712a4b3fedb92c97154e7f9638698e1b485c34b20640545d4368071d2f8"
+ },
+ "B": {
+  "version": "M3_clause_forall",
+  "sha256": "95609fc2eb0c8e2548b6c0e1eb8b2822869986751669bdba64e8ea44653f93f2"
+ },
+ "C": {
+  "version": "original",
+  "sha256": "4183b2057cff350d66848215ff7167196dfc20e1891b598fdddea59077a76685"
+ },
+ "D": {
+  "version": "M2_exponential_bound",
+  "sha256": "b16d87fa97155e9c152dec2e1b70fc84ac525ba36025baa3712003ba71b0be24"
+ }
+}
