@@ -217,18 +217,92 @@ declare -a HITS=()
 # Resource limits and elaboration conveniences change what the elaborator is
 # willing to try, not what the kernel accepts, so they are counted, not failed.
 # Any other option (debug.skipKernelTC is the one that matters) still fails.
-BENIGN='set_option (maxHeartbeats|maxRecDepth|synthInstance\.[A-Za-z]+|autoImplicit|relaxedAutoImplicit|linter\.[A-Za-z.]+|pp\.[A-Za-z.]+|exponentiation\.threshold) '
+# quotPrecheck only skips a check on notation definitions (family 378 uses it
+# for `local notation` over section variables).
+BENIGN='set_option (maxHeartbeats|maxRecDepth|synthInstance\.[A-Za-z]+|autoImplicit|relaxedAutoImplicit|linter\.[A-Za-z.]+|pp\.[A-Za-z.]+|exponentiation\.threshold|quotPrecheck) '
 nb=$(grep -rnE "$BENIGN" $SCOPE 2>/dev/null | wc -l | tr -d ' ')
-printf '      %-22s %s  (resource limits / autoImplicit / linter; not failed)\n' "set_option, benign" "$nb"
+printf '      %-22s %s  (resource limits / autoImplicit / linter / quotPrecheck; not failed)\n' "set_option, benign" "$nb"
 n=$(grep -rnE 'set_option' $SCOPE 2>/dev/null | grep -vE "$BENIGN" | wc -l | tr -d ' ')
 printf '      %-22s %s\n' "set_option, other" "$n"
 [ "$n" != "0" ] && HITS+=("set_option($n)")
 for pat in '^axiom ' 'native_decide' '\bunsafe\b' 'implemented_by' \
-           '@\[extern' 'Lean\.ofReduceBool' '#exit' '^(macro|elab|syntax)'; do
+           '@\[extern' 'Lean\.ofReduceBool' '#exit'; do
   n=$(grep -rnE "$pat" $SCOPE 2>/dev/null | wc -l | tr -d ' ')
   printf '      %-22s %s\n' "$pat" "$n"
   [ "$n" != "0" ] && HITS+=("$pat($n)")
 done
+# Macro-like commands, matched on the code with comments and string contents
+# blanked: in family 378 four wrapped doc-comment lines start with "syntax" or
+# "elaboration", and the old pattern '^(macro|elab|syntax)' also missed
+# `local macro`, `@[...] syntax` and indented commands.  Matches dropped as
+# comment or string are listed, so a lexing mistake here stays visible.
+MACRO='^\s*(@\[[^\]]*\]\s*)?((private|protected|local|scoped)\s+)*(macro_rules|macro|elab_rules|elab|syntax|declare_syntax_cat)\b'
+MOUT=$(python3 - "$MACRO" $SCOPE <<'PY'
+import os, re, sys
+pat = re.compile(sys.argv[1])
+IDENT = re.compile(r"[\w'!?₀-ₜᵢ-ᵪ]")
+
+def code_only(s):
+    # s with comments and string/char literal contents blanked; newlines kept
+    out, i, n, depth = list(s), 0, len(s), 0
+    def blank(a, b):
+        for k in range(a, min(b, n)):
+            if out[k] != '\n':
+                out[k] = ' '
+    while i < n:
+        c = s[i]
+        if depth:                                    # /- ... -/ nests
+            if s.startswith('/-', i): depth += 1; blank(i, i + 2); i += 2
+            elif s.startswith('-/', i): depth -= 1; blank(i, i + 2); i += 2
+            else: blank(i, i + 1); i += 1
+        elif s.startswith('/-', i):
+            depth = 1; blank(i, i + 2); i += 2
+        elif s.startswith('--', i):
+            j = s.find('\n', i); j = n if j < 0 else j
+            blank(i, j); i = j
+        elif c == 'r' and (i == 0 or not IDENT.match(s[i - 1])) and re.match(r'r#*"', s[i:]):
+            h = re.match(r'r(#*)"', s[i:]).group(1)
+            j = s.find('"' + h, i + 2 + len(h)); j = n if j < 0 else j + 1 + len(h)
+            blank(i, j); i = j
+        elif c == '"':
+            j = i + 1
+            while j < n and s[j] != '"':
+                j += 2 if s[j] == '\\' else 1
+            blank(i, j + 1); i = j + 1
+        elif c == "'" and (i == 0 or not IDENT.match(s[i - 1])):
+            m = re.match(r"'(\\[^']{1,8}|[^\\'\n])'", s[i:])
+            if m: blank(i, i + m.end()); i += m.end()
+            else: i += 1
+        else:
+            i += 1
+    return ''.join(out)
+
+hits, dropped = [], []
+for top in sys.argv[2:]:
+    for root, _, files in os.walk(top):
+        for f in sorted(files):
+            if not f.endswith('.lean'):
+                continue
+            p = os.path.join(root, f)
+            s = open(p, encoding='utf-8').read()
+            for no, (a, b) in enumerate(zip(s.split('\n'), code_only(s).split('\n')), 1):
+                if pat.search(b):
+                    hits.append(f"{p}:{no}: {a.strip()[:60]}")
+                elif pat.search(a):
+                    dropped.append(f"{p}:{no}")
+print(len(hits))
+for h in hits[:10]:
+    print(f"      code: {h}")
+for d in dropped[:10]:
+    print(f"      in a comment or string, not counted: {d}")
+if len(dropped) > 10:
+    print(f"      ... and {len(dropped) - 10} more")
+PY
+)
+n=$(printf '%s\n' "$MOUT" | head -1)
+printf '      %-22s %s\n' "macro/elab/syntax" "${n:-?}"
+printf '%s\n' "$MOUT" | tail -n +2
+[ "${n:-1}" != "0" ] && HITS+=("macro/elab/syntax(${n:-?})")
 if [ ${#HITS[@]} -eq 0 ]; then
   ok "none of the above appear in $SCOPE"
 else

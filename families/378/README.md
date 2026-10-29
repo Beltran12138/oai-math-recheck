@@ -72,9 +72,18 @@ gaps in the gate, not from the proof.
   ("syntax and …"). The pattern does not skip comments.
 
 `^axiom`, `native_decide`, `unsafe`, `implemented_by`, `@[extern`,
-`Lean.ofReduceBool` and `#exit` occur 0 times. The two gate defects are
-recorded for a fix with its own negative control; until then gate F reads FAIL
-for this family and the reading above is what replaces it.
+`Lean.ofReduceBool` and `#exit` occur 0 times.
+
+Both defects were fixed after this run, each with a negative control:
+`quotPrecheck` is now benign (a file with `debug.skipKernelTC` and the
+near-miss `quotPrecheckX` still fails), and macro-like commands are matched on
+code with comments and strings blanked, with a word boundary and with
+`local`/`scoped`/attribute prefixes (a control file with 7 real commands among
+decoys in nested comments, strings, raw strings and identifiers gives exactly
+7; the old pattern gave 8 matches, of which only 3 were real). The fixed gate
+F, run on this family's source at `7ef5c0c` outside the Mac run, reads PASS,
+and lists the three doc-comment lines it skipped. The FAIL above is what the
+Mac run printed and stays as recorded.
 
 ## How the build was run
 

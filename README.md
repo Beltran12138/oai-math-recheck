@@ -125,6 +125,12 @@ what a pass does not show.
   update. Passes every gate that applies on x86_64 (CI) and Apple M4, with
   byte-identical statement dumps on both. Its 118 `set_option`s are all resource limits or `autoImplicit`,
   which is why gate F now separates those from options that could matter.
+- [**378**](families/378/README.md), subexponential #k-SAT (the ETH family):
+  3,977 files at upstream `7ef5c0c`. The statement was read first under a
+  frozen pre-registration with a blind control. Gates A, B, C and E pass on
+  Apple M4; gate F's 11 hits were two defects in gate F itself
+  (`quotPrecheck` missing from the benign list, a macro pattern that matched
+  doc-comment prose), since fixed. Single architecture so far.
 
 ## What family 325 actually claims — read this before quoting any of it
 
