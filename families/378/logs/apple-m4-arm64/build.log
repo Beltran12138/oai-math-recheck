@@ -1,0 +1,123 @@
+ℹ [10738/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.SquarefreeKeyMapProgram
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/SquarefreeKeyMapProgram.lean:537:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.Squarefree.KeyMapProgram.native_map_trace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/SquarefreeKeyMapProgram.lean:538:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.Squarefree.KeyMapProgram.mapped_eq_filter_map' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [10948/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgramAudit
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafStatisticsProgramAudit.lean:9:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgram.program_primitive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafStatisticsProgramAudit.lean:10:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgram.Arity.program_primitive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafStatisticsProgramAudit.lean:11:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgram.Finalize.program_runsIn' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafStatisticsProgramAudit.lean:12:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgram.Binary.lifted_eval' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11027/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgramPositivity
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafStatisticsProgramPositivity.lean:59:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafStatisticsProgram.arity_pos_of_free_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11588/12901] Replayed OAI.Algorithms.SubexponentialSAT.SubexpMainScheduledPackets
+info: OAI/Algorithms/SubexponentialSAT/SubexpMainScheduledPackets.lean:121:0: 'OAI.Algorithms.SubexponentialSAT.SubexpMainScheduledPackets.packet' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11596/12901] Replayed OAI.Algorithms.SubexponentialSAT.Subexp.PackingExecutionBounds
+info: OAI/Algorithms/SubexponentialSAT/Subexp/PackingExecutionBounds.lean:164:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.PackingExecutionBounds.budget_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/Subexp/PackingExecutionBounds.lean:165:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.PackingExecutionBounds.program_trace_polynomial' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/Subexp/PackingExecutionBounds.lean:166:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.PackingExecutionBounds.program_primitive_polynomial' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11647/12901] Replayed OAI.Algorithms.SubexponentialSAT.Subexp.NodeCacheBounds
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodeCacheBounds.lean:167:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodeCacheBounds.tableBudget_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodeCacheBounds.lean:168:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodeCacheBounds.cacheBytes_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodeCacheBounds.lean:169:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodeCacheBounds.originTableBound_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11648/12901] Replayed OAI.Algorithms.SubexponentialSAT.Subexp.NodeOriginBytes
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodeOriginBytes.lean:82:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodeOriginBytes.outputBytes_length' depends on axioms: [propext, Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodeOriginBytes.lean:83:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodeOriginBytes.outputBytes_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11657/12901] Replayed OAI.Algorithms.SubexponentialSAT.Subexp.NodePreludeSum
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodePreludeSum.lean:127:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodePreludeSum.cost_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11666/12901] Replayed OAI.Algorithms.SubexponentialSAT.Subexp.NodeCanonicalScale
+info: OAI/Algorithms/SubexponentialSAT/Subexp/NodeCanonicalScale.lean:205:0: 'OAI.Algorithms.SubexponentialSAT.Subexp.NodeCanonicalScale.combinedScale_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11703/12901] Replayed OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawScheduledPackets
+info: OAI/Algorithms/SubexponentialSAT/SubexpOrderedRawScheduledPackets.lean:121:0: 'OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawScheduledPackets.packet' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11708/12901] Replayed OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawMomentExecution
+info: OAI/Algorithms/SubexponentialSAT/SubexpOrderedRawMomentExecution.lean:150:0: 'OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawMomentExecution.run_exists' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SubexpOrderedRawMomentExecution.lean:151:0: 'OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawMomentExecution.Run.readback' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [11722/12901] Replayed OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawMainTheorem
+info: OAI/Algorithms/SubexponentialSAT/SubexpOrderedRawMainTheorem.lean:128:0: 'OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawMainTheorem.mainTheorem' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SubexpOrderedRawMainTheorem.lean:129:0: 'OAI.Algorithms.SubexponentialSAT.SubexpOrderedRawMainTheorem.mainTheorem_explicit' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [12276/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafQueryFrontendExact
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafQueryFrontendExact.lean:89:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafQueryFrontend.frontend_eval_with_inputLengths' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [12336/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafParametersProgramSerializationBounds
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafParametersProgramSerializationBounds.lean:63:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafParametersProgram.Serialization.guarded_lengths_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafParametersProgramSerializationBounds.lean:64:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafParametersProgram.Serialization.uniform_guarded_lengths_polynomial' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [12342/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.PackingCallerProgramReplay
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/PackingCallerProgramReplay.lean:77:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.PackingCallerProgram.Replay.command_avoids' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/PackingCallerProgramReplay.lean:78:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.PackingCallerProgram.Replay.replay' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [12398/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafQueryFrontendReplay
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafQueryFrontendReplay.lean:179:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafQueryFrontend.frontend_avoids_outerCarried' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLog/LeafQueryFrontendReplay.lean:180:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLog.LeafQueryFrontend.frontend_eval_rebase_outerCarried' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+ℹ [12560/12901] Replayed OAI.Algorithms.SubexponentialSAT.SqrtLogSpace.Final
+info: OAI/Algorithms/SubexponentialSAT/SqrtLogSpace/Final.lean:197:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLogSpace.compiled_exact_count_and_sat' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLogSpace/Final.lean:198:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLogSpace.exact_count_and_sat' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLogSpace/Final.lean:199:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLogSpace.exact_count_eth' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLogSpace/Final.lean:200:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLogSpace.sat_polynomial_space' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: OAI/Algorithms/SubexponentialSAT/SqrtLogSpace/Final.lean:201:0: 'OAI.Algorithms.SubexponentialSAT.SqrtLogSpace.original_sat_main' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Build completed successfully (12901 jobs).
+BUILD_EXIT=0
+ELAPSED_SECONDS=3

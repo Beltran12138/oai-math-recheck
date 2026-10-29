@@ -1,0 +1,24 @@
+Apple M4 Mac mini (arm64), 16 GB RAM, macOS 26.5.2 (25F84), Lean v4.34.1, mathlib d13f23b723b8
+harness: ee5c1ef (recheck.sh, audit.sh, families/378/family.conf). The working tree
+differed from ee5c1ef only in the mode of the two scripts (100644 -> 100755), see
+harness-dirty-378.diff; their contents are ee5c1ef's:
+  sha256 52a5859397fadb40049c7c055a9cbe01e1e6a08bf79e8d949cf426523607bf40  audit.sh
+  sha256 d3c795ac6059bb1e08bbd9010ec3c51fb5c87a98e213b53b9f624c604b950a06  recheck.sh
+openai/math at 7ef5c0cc5ca4 (FAMILY_UPSTREAM_SHA)
+
+The build was done in segments (see ../../README.md, "How the build was run"):
+gates.log, build.log, axioms.log and the dumps are from the final run, which
+found every module already built (0 built this run). serial-378.log records the
+last 65 modules, built one at a time; mem-378.log is the memory sampler that ran
+alongside. The earlier, parallel build output was overwritten and is not kept.
+
+Files were copied off the Mac through a private relay repository and checked
+against the SHA256SUMS written on the Mac before they were copied here.
+
+dump-solution.txt is byte-identical to dump-challenge.txt, so only the
+challenge dump is kept (gzipped), with the negative control's:
+  sha256 8ed3f7a654d0aa9f24b780af4f8d0d60dab23de8c1a7058d50191ce35cf3f90a  dump-challenge.txt
+  sha256 8ed3f7a654d0aa9f24b780af4f8d0d60dab23de8c1a7058d50191ce35cf3f90a  dump-solution.txt
+  sha256 4d230abcacdb60462672212c871e9bbd8d0a50964a473b7726d3e30f7f228dfc  dump-negcontrol.txt
+The negative control differs from the challenge in two bytes, both in
+runtimeScale: the exponent literal 2 becomes 3 (OfNat.ofNat Nat 2 (instOfNatNat 2)).
